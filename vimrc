@@ -181,6 +181,7 @@ let mapleader = ","
 " Don't use Ex mode, use Q for formatting
 map Q gq
 
+set enc=utf-8
 " highlight trailing whitespace  
 set listchars=tab:»·,trail:·,nbsp:·,nbsp:×,extends:›,precedes:‹
 nmap <silent> <leader>s :set nolist!<CR>

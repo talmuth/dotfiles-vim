@@ -82,6 +82,7 @@ Bundle 'MarcWeber/vim-addon-mw-utils'
 Bundle 'slim-template/vim-slim'
 Bundle 'majutsushi/tagbar'
 Bundle 'techlivezheng/tagbar-phpctags'
+Bundle 'AndrewRadev/switch.vim'
 
 Bundle 'git@github.com:talmuth/misc-lang-settings.vim.git'
 Bundle 'git@github.com:talmuth/local-snippets.vim.git'

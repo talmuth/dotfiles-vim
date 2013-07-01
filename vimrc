@@ -21,6 +21,7 @@ NeoBundle 'vim-scripts/FuzzyFinder'
 NeoBundle 'vim-scripts/greplace.vim'
 NeoBundle 'vim-scripts/md5.vim'
 NeoBundle 'vim-scripts/Conque-Shell'
+NeoBundle 'vim-scripts/sudo.vim'
 
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-unimpaired'
@@ -71,7 +72,11 @@ NeoBundle 'emezeske/manpageview'
 NeoBundle 'vimoutliner/vimoutliner'
 NeoBundle 'mileszs/ack.vim'
 NeoBundle 'Lokaltog/vim-easymotion'
-NeoBundle 'Shougo/neocomplcache'
+if has('lua')
+  NeoBundle 'Shougo/neocomplete.vim'
+else
+  NeoBundle 'Shougo/neocomplcache.vim'
+end
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'skammer/vim-css-color'
 NeoBundle 'briangershon/html5.vim'

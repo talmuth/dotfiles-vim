@@ -10,7 +10,6 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc'
 
 NeoBundle 'vim-scripts/localvimrc'
-NeoBundle 'vim-scripts/PDV--phpDocumentor-for-Vim'
 NeoBundle 'vim-scripts/vimwiki'
 NeoBundle 'vim-scripts/AutoComplPop'
 NeoBundle 'vim-scripts/DrillCtg'
@@ -79,14 +78,17 @@ NeoBundle 'briangershon/html5.vim'
 NeoBundle 'shawncplus/php.vim'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'cakebaker/scss-syntax.vim'
-NeoBundle 'tobyS/pdv'
 NeoBundle 'nishigori/vim-phpunit-snippets'
 NeoBundle 'garbas/vim-snipmate'
 NeoBundle 'tomtom/tlib_vim'
 NeoBundle 'MarcWeber/vim-addon-mw-utils'
 NeoBundle 'slim-template/vim-slim'
 NeoBundle 'majutsushi/tagbar'
-NeoBundle 'techlivezheng/tagbar-phpctags'
+NeoBundle 'techlivezheng/tagbar-phpctags', {
+      \ 'build': {
+      \   'unix': 'make'
+      \ },
+      \}
 NeoBundle 'AndrewRadev/switch.vim'
 NeoBundle 'wting/gitsessions.vim'
 

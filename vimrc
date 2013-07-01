@@ -20,7 +20,6 @@ NeoBundle 'vim-scripts/ShowMarks'
 NeoBundle 'vim-scripts/FuzzyFinder'
 NeoBundle 'vim-scripts/greplace.vim'
 NeoBundle 'vim-scripts/md5.vim'
-NeoBundle 'vim-scripts/PHPUnit-QF'
 NeoBundle 'vim-scripts/Conque-Shell'
 
 NeoBundle 'tpope/vim-fugitive'
@@ -92,7 +91,16 @@ NeoBundle 'wting/gitsessions.vim'
 
 NeoBundle 'git@github.com:talmuth/misc-lang-settings.vim.git'
 NeoBundle 'git@github.com:talmuth/local-snippets.vim.git'
-NeoBundle 'git@github.com:talmuth/vim-php-debugger.git'
+
+if has('python') || has('python3')
+  let s:python_ver = 0
+  silent! python import sys, vim;
+        \ vim.command("let s:python_ver="+"".join(map(str,sys.version_info[0:3])))
+  if s:python_ver > 260
+    NeoBundle 'vim-scripts/PHPUnit-QF'
+    NeoBundle 'git@github.com:talmuth/vim-php-debugger.git'
+  end
+end
 
 filetype on
 syntax on

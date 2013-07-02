@@ -300,7 +300,6 @@ let g:manpageview_multimanpage=0
 let g:localvimrc_ask=0
 
 let g:Powerline_symbols='fancy'
-let g:tagbar_phpctags_bin='~/.vim/bundle/misc-lang-settings.vim/phpctags/phpctags'
 
 let g:SuperTabDefaultCompletionType="context"
 let g:SuperTabContextDefaultCompletionType="<c-n>"

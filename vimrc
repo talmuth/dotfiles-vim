@@ -50,7 +50,6 @@ NeoBundle 'pydave/gitv'
 NeoBundle 'plasticboy/vim-markdown'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'shawncplus/phpcomplete.vim'
-NeoBundle 'SirVer/ultisnips'
 NeoBundle 'godlygeek/tabular'
 NeoBundle 'jezcope/vim-align'
 NeoBundle 'groenewege/vim-less'
@@ -67,10 +66,11 @@ NeoBundle 'emezeske/manpageview'
 NeoBundle 'vimoutliner/vimoutliner'
 NeoBundle 'mileszs/ack.vim'
 NeoBundle 'Lokaltog/vim-easymotion'
-if has('lua')
-  NeoBundle 'Shougo/neocomplete.vim'
-else
+if !has('lua') || v:version < 703 ||
+        \ (v:version == 703 && !has('patch885'))
   NeoBundle 'Shougo/neocomplcache.vim'
+else
+  NeoBundle 'Shougo/neocomplete.vim'
 end
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'skammer/vim-css-color'
@@ -102,6 +102,7 @@ if has('python') || has('python3')
   if s:python_ver > 260
     NeoBundle 'vim-scripts/PHPUnit-QF'
     NeoBundle 'git@github.com:talmuth/vim-php-debugger.git'
+    NeoBundle 'SirVer/ultisnips'
   end
 end
 

@@ -7,7 +7,24 @@ call neobundle#rc(expand('~/.vim/bundle/'))
 
 NeoBundleFetch 'Shougo/neobundle.vim'
 
-NeoBundle 'Shougo/vimproc'
+NeoBundle 'Shougo/vimproc', {
+      \ 'build' : {
+      \     'windows' : 'make -f make_mingw32.mak',
+      \     'cygwin' : 'make -f make_cygwin.mak',
+      \     'mac' : 'make -f make_mac.mak',
+      \     'unix' : 'make -f make_unix.mak',
+      \    },
+      \ }
+NeoBundle 'Shougo/unite.vim'
+if !has('lua') || v:version < 703 ||
+        \ (v:version == 703 && !has('patch885'))
+  NeoBundle 'Shougo/neocomplcache.vim'
+else
+  NeoBundle 'Shougo/neocomplete.vim'
+end
+NeoBundle 'Shougo/neosnippet.vim'
+NeoBundle 'Shougo/context_filetype.vim'
+NeoBundle 'Shougo/vimshell.vim'
 
 NeoBundle 'vim-scripts/localvimrc'
 NeoBundle 'vim-scripts/vimwiki'
@@ -17,7 +34,7 @@ NeoBundle 'vim-scripts/ShowMarks'
 NeoBundle 'vim-scripts/FuzzyFinder'
 NeoBundle 'vim-scripts/greplace.vim'
 NeoBundle 'vim-scripts/md5.vim'
-NeoBundle 'vim-scripts/Conque-Shell'
+"NeoBundle 'vim-scripts/Conque-Shell'
 NeoBundle 'vim-scripts/sudo.vim'
 
 NeoBundle 'tpope/vim-fugitive'
@@ -53,7 +70,7 @@ NeoBundle 'shawncplus/phpcomplete.vim'
 NeoBundle 'godlygeek/tabular'
 NeoBundle 'jezcope/vim-align'
 NeoBundle 'groenewege/vim-less'
-NeoBundle 'ervandew/supertab'
+"NeoBundle 'ervandew/supertab'
 NeoBundle 'guns/xterm-color-table.vim'
 NeoBundle 'leshill/vim-json'
 NeoBundle 'tmallen/proj-vim'
@@ -66,13 +83,6 @@ NeoBundle 'emezeske/manpageview'
 NeoBundle 'vimoutliner/vimoutliner'
 NeoBundle 'mileszs/ack.vim'
 NeoBundle 'Lokaltog/vim-easymotion'
-if !has('lua') || v:version < 703 ||
-        \ (v:version == 703 && !has('patch885'))
-  NeoBundle 'Shougo/neocomplcache.vim'
-else
-  NeoBundle 'Shougo/neocomplete.vim'
-end
-NeoBundle 'Shougo/unite.vim'
 NeoBundle 'skammer/vim-css-color'
 NeoBundle 'briangershon/html5.vim'
 NeoBundle 'shawncplus/php.vim'
@@ -91,6 +101,7 @@ NeoBundle 'techlivezheng/tagbar-phpctags', {
       \}
 NeoBundle 'AndrewRadev/switch.vim'
 NeoBundle 'wting/gitsessions.vim'
+NeoBundle 'hrsh7th/vim-versions'
 
 NeoBundle 'git@github.com:talmuth/misc-lang-settings.vim.git'
 NeoBundle 'git@github.com:talmuth/local-snippets.vim.git'
@@ -102,7 +113,7 @@ if has('python') || has('python3')
   if s:python_ver > 260
     NeoBundle 'vim-scripts/PHPUnit-QF'
     NeoBundle 'git@github.com:talmuth/vim-php-debugger.git'
-    NeoBundle 'SirVer/ultisnips'
+    "NeoBundle 'SirVer/ultisnips'
   end
 end
 
@@ -328,3 +339,58 @@ highlight IndentGuidesEven ctermbg=236
 highlight IndentGuidesOdd ctermbg=235
 
 au! BufRead,BufNewFile,BufWinEnter *.zsh-theme setfiletype zsh.zshtheme
+"augroup PHPUnitFileType
+"  autocmd!
+"  autocmd BufWinEnter,BufNewFile *Test.php set filetype=php.phpunit
+"augroup END
+
+" SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+ \ "\<Plug>(neosnippet_expand_or_jump)"
+ \: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+ \ "\<Plug>(neosnippet_expand_or_jump)"
+ \: "\<TAB>"
+
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplete.
+let g:neocomplete#enable_at_startup = 1
+" Use smartcase.
+let g:neocomplete#enable_smart_case = 1
+
+" For snippet_complete marker.
+if has('conceal')
+  set conceallevel=2 concealcursor=i
+endif
+
+" Define dictionary.
+let g:neocomplete#sources#dictionary#dictionaries = {
+    \ 'default' : '',
+    \ 'vimshell' : $HOME.'/.vimshell_hist',
+    \ 'scheme' : $HOME.'/.gosh_completions'
+    \ }
+
+" Define keyword.
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+" Enable heavy omni completion.
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+" For perlomni.vim setting.
+" https://github.com/c9s/perlomni.vim
+let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'

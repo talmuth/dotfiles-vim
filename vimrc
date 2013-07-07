@@ -61,7 +61,6 @@ NeoBundle 'scrooloose/snipmate-snippets'
 NeoBundle 'scrooloose/nerdcommenter'
 
 NeoBundle 'skwp/vim-colors-solarized'
-NeoBundle 'skwp/vim-powerline'
 
 NeoBundle 'pydave/gitv'
 NeoBundle 'plasticboy/vim-markdown'
@@ -106,6 +105,7 @@ NeoBundle 'hrsh7th/vim-versions'
 NeoBundle 'git@github.com:talmuth/misc-lang-settings.vim.git'
 NeoBundle 'git@github.com:talmuth/local-snippets.vim.git'
 
+let s:has_python_powerline=0
 if has('python') || has('python3')
   let s:python_ver = 0
   silent! python import sys, vim;
@@ -113,9 +113,20 @@ if has('python') || has('python3')
   if s:python_ver > 260
     NeoBundle 'vim-scripts/PHPUnit-QF'
     NeoBundle 'git@github.com:talmuth/vim-php-debugger.git'
-    "NeoBundle 'SirVer/ultisnips'
+    silent python <<EOF
+import vim
+try:
+  import powerline.vim
+  vim.command("let s:has_python_powerline=1")
+except ImportError:
+  pass
+EOF
   end
 end
+
+if s:has_python_powerline == 0
+  NeoBundle 'skwp/vim-powerline'
+endif
 
 filetype on
 syntax on

@@ -98,6 +98,7 @@ NeoBundle 'techlivezheng/tagbar-phpctags', {
 NeoBundle 'AndrewRadev/switch.vim'
 NeoBundle 'wting/gitsessions.vim'
 NeoBundle 'hrsh7th/vim-versions'
+NeoBundle 'mhinz/vim-signify'
 
 NeoBundle 'git@github.com:talmuth/misc-lang-settings.vim.git'
 NeoBundle 'git@github.com:talmuth/local-snippets.vim.git'

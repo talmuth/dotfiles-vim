@@ -35,6 +35,8 @@ NeoBundle 'vim-scripts/greplace.vim'
 NeoBundle 'vim-scripts/md5.vim'
 NeoBundle 'vim-scripts/sudo.vim'
 
+NeoBundle 'vim-ruby/vim-ruby'
+
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-unimpaired'
 NeoBundle 'tpope/vim-pastie'
@@ -145,6 +147,8 @@ let g:rubycomplete_classes_in_global = 1
 
 " syntastic
 let g:syntastic_enable_signs=1
+let g:syntastic_error_symbol='✗'
+let g:syntastic_warning_symbol='⚠'
 
 set background=dark
 colorscheme solarized

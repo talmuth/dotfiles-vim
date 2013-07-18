@@ -126,6 +126,8 @@ end
 
 if s:has_python_powerline == 0
   NeoBundle 'skwp/vim-powerline'
+else
+  NeoBundle 'baopham/linepower.vim'
 endif
 
 filetype on

@@ -111,8 +111,10 @@ if has('python') || has('python3')
   silent! python import sys, vim;
         \ vim.command("let s:python_ver="+"".join(map(str,sys.version_info[0:3])))
   if s:python_ver > 260
+    NeoBundle 'dbakker/vim-lint'
     NeoBundle 'vim-scripts/PHPUnit-QF'
     NeoBundle 'git@github.com:talmuth/vim-php-debugger.git'
+
     silent python <<EOF
 import vim
 try:
@@ -262,23 +264,14 @@ vmap <leader>/ :call NERDComment(0, "invert")<cr>
 nmap <leader>t :TagbarToggle<CR>
 "map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 "map <C-Left> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
-"
 
 nmap <leader>g :GundoToggle<CR>
 
-
 " ,f to fast finding files using fuzzy finder.
 nmap <leader>f :FufFile **/<CR>
-nmap <leader>b :FufBuffer *<CR>
 
-
-let g:Conque_Read_Timeout = 50 " timeout for waiting for command output.
-let g:Conque_TERM = 'xterm'
-" ,sh to open vimshell window
-nmap <Leader>sh :ConqueTermSplit bash<CR>
-" ,r to open vimshell window
-nmap <Leader>r :ConqueTermSplit 
-
+" ,sh to open vimshell tab
+nmap <Leader>sh :VimShellTab<CR>
 
 let g:yankring_replace_n_pkey = '<leader>['
 let g:yankring_replace_n_nkey = '<leader>]'

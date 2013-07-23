@@ -101,6 +101,7 @@ NeoBundle 'AndrewRadev/switch.vim'
 NeoBundle 'wting/gitsessions.vim'
 NeoBundle 'hrsh7th/vim-versions'
 NeoBundle 'mhinz/vim-signify'
+NeoBundle 'Yggdroot/indentLine'
 
 NeoBundle 'git@github.com:talmuth/misc-lang-settings.vim.git'
 NeoBundle 'git@github.com:talmuth/local-snippets.vim.git'
@@ -153,6 +154,9 @@ let g:rubycomplete_classes_in_global = 1
 let g:syntastic_enable_signs=1
 let g:syntastic_error_symbol='✗'
 let g:syntastic_warning_symbol='⚠'
+
+let g:indentLine_char='┆'
+let g:indentLine_color_term=236
 
 set background=dark
 colorscheme solarized

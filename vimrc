@@ -83,7 +83,6 @@ NeoBundle 'mileszs/ack.vim'
 NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'skammer/vim-css-color'
 NeoBundle 'briangershon/html5.vim'
-NeoBundle 'shawncplus/php.vim'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'cakebaker/scss-syntax.vim'
 NeoBundle 'nishigori/vim-phpunit-snippets'
@@ -102,9 +101,12 @@ NeoBundle 'wting/gitsessions.vim'
 NeoBundle 'hrsh7th/vim-versions'
 NeoBundle 'mhinz/vim-signify'
 NeoBundle 'Yggdroot/indentLine'
+NeoBundle 'maksimr/vim-jsbeautify'
+NeoBundle 'einars/js-beautify'
 
 NeoBundle 'git@github.com:talmuth/misc-lang-settings.vim.git'
 NeoBundle 'git@github.com:talmuth/local-snippets.vim.git'
+NeoBundle 'git@github.com:talmuth/php.vim.git'
 
 let s:has_python_powerline=0
 if has('python') || has('python3')
@@ -252,7 +254,6 @@ nmap <silent> <C-N> :silent noh<CR>
 " Ctrol-E to switch between 2 last buffers
 nmap <C-E> :b#<CR>
 
-let g:NERDTreeDirArrows=0
 " Ctrl-P to Display the file browser tree
 nmap <C-P> :NERDTreeToggle<CR>
 " ,p to show current file in the tree
@@ -406,3 +407,5 @@ let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\
 " For perlomni.vim setting.
 " https://github.com/c9s/perlomni.vim
 let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+
+let g:localvimrc_sandbox=0

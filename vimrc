@@ -84,7 +84,6 @@ NeoBundle 'leshill/vim-json'
 NeoBundle 'tmallen/proj-vim'
 NeoBundle 'rodjek/vim-puppet'
 NeoBundle 'spiiph/vim-space'
-NeoBundle 'tsaleh/vim-tmux'
 NeoBundle 'chrismetcalf/vim-yankring'
 NeoBundle 'clones/vim-l9'
 NeoBundle 'emezeske/manpageview'
@@ -113,6 +112,9 @@ NeoBundle 'mhinz/vim-signify'
 NeoBundle 'Yggdroot/indentLine'
 NeoBundle 'maksimr/vim-jsbeautify'
 NeoBundle 'einars/js-beautify'
+if executable('tmux')
+  NeoBundle 'tsaleh/vim-tmux'
+endif
 
 NeoBundle 'git@github.com:talmuth/misc-lang-settings.vim.git'
 NeoBundle 'git@github.com:talmuth/local-snippets.vim.git'

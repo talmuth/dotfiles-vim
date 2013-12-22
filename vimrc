@@ -1,9 +1,19 @@
 set nocompatible
 
 if has('vim_starting')
-  set rtp+=~/.vim/bundle/neobundle.vim/
+  if has("win32")
+    set rtp+=~/vimfiles/bundle/neobundle.vim/
+  else
+    set rtp+=~/.vim/bundle/neobundle.vim/
+  endif
 endif
-call neobundle#rc(expand('~/.vim/bundle/'))
+if has("win32")
+  lang C
+  call neobundle#rc(expand('~/vimfiles/bundle/'))
+else
+  set shell=/bin/zsh
+  call neobundle#rc(expand('~/.vim/bundle/'))
+endif
 
 NeoBundleFetch 'Shougo/neobundle.vim'
 
@@ -224,7 +234,7 @@ setlocal spelllang=en_us
 set wildignore=.svn,CVS,.git,.hg,*.o,*.a,*.class,*.mo,*.la,*.so,*.obj,*.swp,*.jpg,*.png,*.xpm,*.gif
 
 set backupdir=~/.backup
-set directory=~/.backup,~/tmp
+set directory=~/.backup,~/tmp,$TMP
 
 let g:showmarks_enable = 0
 
@@ -286,8 +296,6 @@ nmap <leader>y :YRShow<cr>
 if has("mouse")
   set mouse=a
 endif
-
-set shell=/bin/zsh
 
 set winheight=80
 

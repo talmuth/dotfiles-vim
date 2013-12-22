@@ -1,4 +1,4 @@
-set guifont=PragmataPro\ 12
+set guifont=PragmataPro:h12
 set cul
 
 set background=dark

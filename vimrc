@@ -25,24 +25,25 @@ NeoBundle 'Shougo/vimproc', {
       \     'unix' : 'make -f make_unix.mak',
       \    },
       \ }
-NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/unite.vim', {'depends': 'vim-scripts/md5.vim'}
 if !has('lua') || v:version < 703 ||
         \ (v:version == 703 && !has('patch885'))
   NeoBundle 'Shougo/neocomplcache.vim'
 else
-  NeoBundle 'Shougo/neocomplete.vim'
+  NeoBundle 'Shougo/neocomplete.vim', {'depends': 'vim-scripts/md5.vim'}
 end
 NeoBundle 'Shougo/neosnippet.vim'
 NeoBundle 'Shougo/context_filetype.vim'
 NeoBundle 'Shougo/vimshell.vim'
+NeoBundle 'Shougo/unite-outline'
+NeoBundle 'Shougo/vimfiler.vim'
+NeoBundle 'Shougo/unite-ssh'
 
 NeoBundle 'vim-scripts/localvimrc'
 NeoBundle 'vim-scripts/vimwiki'
 NeoBundle 'vim-scripts/AutoComplPop'
 NeoBundle 'vim-scripts/ShowMarks'
-NeoBundle 'vim-scripts/FuzzyFinder'
 NeoBundle 'vim-scripts/greplace.vim'
-NeoBundle 'vim-scripts/md5.vim'
 NeoBundle 'vim-scripts/sudo.vim'
 
 NeoBundle 'vim-ruby/vim-ruby'
@@ -85,19 +86,16 @@ NeoBundle 'tmallen/proj-vim'
 NeoBundle 'rodjek/vim-puppet'
 NeoBundle 'spiiph/vim-space'
 NeoBundle 'chrismetcalf/vim-yankring'
-NeoBundle 'clones/vim-l9'
 NeoBundle 'emezeske/manpageview'
 NeoBundle 'vimoutliner/vimoutliner'
-NeoBundle 'mileszs/ack.vim'
 NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'skammer/vim-css-color'
 NeoBundle 'briangershon/html5.vim'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'cakebaker/scss-syntax.vim'
 NeoBundle 'nishigori/vim-phpunit-snippets'
-NeoBundle 'garbas/vim-snipmate'
-NeoBundle 'tomtom/tlib_vim'
-NeoBundle 'MarcWeber/vim-addon-mw-utils'
+NeoBundle 'garbas/vim-snipmate', {'depends': 'MarcWeber/vim-addon-mw-utils'}
+"NeoBundle 'tomtom/tlib_vim'
 NeoBundle 'slim-template/vim-slim'
 NeoBundle 'majutsushi/tagbar'
 NeoBundle 'techlivezheng/tagbar-phpctags', {
@@ -112,6 +110,7 @@ NeoBundle 'mhinz/vim-signify'
 NeoBundle 'Yggdroot/indentLine'
 NeoBundle 'maksimr/vim-jsbeautify'
 NeoBundle 'einars/js-beautify'
+NeoBundle 'tsukkee/unite-tag'
 if executable('tmux')
   NeoBundle 'tsaleh/vim-tmux'
 endif
@@ -284,9 +283,6 @@ nmap <leader>t :TagbarToggle<CR>
 
 nmap <leader>g :GundoToggle<CR>
 
-" ,f to fast finding files using fuzzy finder.
-nmap <leader>f :FufFile **/<CR>
-
 " ,sh to open vimshell tab
 nmap <Leader>sh :VimShellTab<CR>
 
@@ -419,3 +415,22 @@ let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\
 let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
 let g:localvimrc_sandbox=0
+
+" Unite
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+nnoremap <leader>f :Unite file_rec/async -default-action=tabopen -start-insert<CR>
+nnoremap <leader>o :Unite outline -start-insert<CR>
+
+let g:vimfiler_as_default_explorer = 1
+
+if executable('ack-grep') || executable('ack')
+  let g:unite_source_grep_command = executable('ack') ? 'ack' : 'ack-grep'
+  let g:unite_source_grep_default_opts = '--no-heading --no-color -a -H'
+  let g:unite_source_grep_recursive_opt = ''
+endif
+nnoremap <C-F> :UniteWithCursorWord grep:%: -default-action=tabopen -start-insert<CR>
+
+autocmd BufEnter *
+  \  if empty(&buftype)
+  \|   nnoremap <buffer> <C-]> :<C-u>UniteWithCursorWord -immediately -default-action=tabopen tag<CR>
+  \| endif

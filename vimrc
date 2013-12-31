@@ -38,6 +38,7 @@ NeoBundle 'Shougo/vimshell.vim'
 NeoBundle 'Shougo/unite-outline'
 NeoBundle 'Shougo/vimfiler.vim'
 NeoBundle 'Shougo/unite-ssh'
+NeoBundle 'Shougo/unite-help'
 
 NeoBundle 'vim-scripts/localvimrc'
 NeoBundle 'vim-scripts/vimwiki'
@@ -114,10 +115,10 @@ NeoBundle 'tsukkee/unite-tag'
 if executable('tmux')
   NeoBundle 'tsaleh/vim-tmux'
 endif
+NeoBundle 'osyo-manga/unite-quickfix'
 
 NeoBundle 'git@github.com:talmuth/misc-lang-settings.vim.git'
 NeoBundle 'git@github.com:talmuth/local-snippets.vim.git'
-NeoBundle 'git@github.com:talmuth/php.vim.git'
 
 let s:has_python_powerline=0
 if has('python') || has('python3')
@@ -167,6 +168,9 @@ let g:rubycomplete_classes_in_global = 1
 let g:syntastic_enable_signs=1
 let g:syntastic_error_symbol='✗'
 let g:syntastic_warning_symbol='⚠'
+let g:syntastic_auto_loc_list=1
+let g:syntastic_always_populate_loc_list=1
+let g:syntastic_loc_list_height=10
 
 let g:indentLine_char='┆'
 let g:indentLine_color_term=236
@@ -407,9 +411,10 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 if !exists('g:neocomplete#sources#omni#input_patterns')
   let g:neocomplete#sources#omni#input_patterns = {}
 endif
-let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
 let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
 " For perlomni.vim setting.
 " https://github.com/c9s/perlomni.vim
 let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
@@ -418,19 +423,30 @@ let g:localvimrc_sandbox=0
 
 " Unite
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
-nnoremap <leader>f :Unite file_rec/async -default-action=tabopen -start-insert<CR>
-nnoremap <leader>o :Unite outline -start-insert<CR>
+nnoremap <leader>f :<C-u>Unite file_rec/async -default-action=tabopen -start-insert<CR>
+nnoremap <leader>o :<C-u>Unite outline -start-insert<CR>
+nnoremap <space>s :<C-u>Unite -quick-match buffer<CR>
 
 let g:vimfiler_as_default_explorer = 1
 
-if executable('ack-grep') || executable('ack')
+if executable('ag')
+  " Use ag in unite grep source.
+  let g:unite_source_grep_command = 'ag'
+  let g:unite_source_grep_default_opts =
+    \ '--line-numbers --nocolor --nogroup --hidden --ignore ' .
+    \  '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
+  let g:unite_source_grep_recursive_opt = ''
+elseif executable('ack-grep') || executable('ack')
   let g:unite_source_grep_command = executable('ack') ? 'ack' : 'ack-grep'
   let g:unite_source_grep_default_opts = '--no-heading --no-color -a -H'
   let g:unite_source_grep_recursive_opt = ''
 endif
-nnoremap <C-F> :UniteWithCursorWord grep:%: -default-action=tabopen -start-insert<CR>
+nnoremap <C-F> :UniteWithCursorWord grep:. -default-action=tabopen<CR>
 
 autocmd BufEnter *
   \  if empty(&buftype)
   \|   nnoremap <buffer> <C-]> :<C-u>UniteWithCursorWord -immediately -default-action=tabopen tag<CR>
   \| endif
+
+let g:signify_mapping_next_hunk = '<leader>gj'
+let g:signify_mapping_prev_hunk = '<leader>gk'

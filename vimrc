@@ -114,6 +114,8 @@ NeoBundle 'einars/js-beautify'
 NeoBundle 'tsukkee/unite-tag'
 if executable('tmux')
   NeoBundle 'tsaleh/vim-tmux'
+  NeoBundle 'benmills/vimux'
+  NeoBundle 'skalnik/vim-vroom'
 endif
 NeoBundle 'osyo-manga/unite-quickfix'
 
@@ -278,7 +280,6 @@ nmap <leader>p :NERDTreeFind<CR>
 nmap <leader>/ :call NERDComment(0, "invert")<cr>
 vmap <leader>/ :call NERDComment(0, "invert")<cr>
 
-
 " ,t to show tags window
 "let Tlist_Show_Menu=1
 nmap <leader>t :TagbarToggle<CR>
@@ -299,21 +300,12 @@ if has("mouse")
   set mouse=a
 endif
 
-set winheight=80
-
 let g:debuggerMaxDepth = 10
-
-let g:snips_author = 'Denys Lozko <denis.lozko@gmail.com>' 
 
 nmap <silent> <A-Up> :wincmd k<CR>
 nmap <silent> <A-Down> :wincmd j<CR>
 nmap <silent> <A-Left> :wincmd h<CR>
 nmap <silent> <A-Right> :wincmd l<CR>
-
-au FileType qf call AdjustWindowHeight(3, 10)
-function! AdjustWindowHeight(minheight, maxheight)
-  exe max([min([line("$"), a:maxheight]), a:minheight]) . "wincmd _"
-endfunction
 
 function! <SID>StripTrailingWhitespaces()
     " Preparation: save last search, and cursor position.

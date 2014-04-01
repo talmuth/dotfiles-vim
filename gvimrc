@@ -1,4 +1,4 @@
-set guifont=PragmataPro:h12
+set guifont=PragmataPro:h16
 set cul
 
 set background=dark
@@ -35,3 +35,5 @@ endfunction
 "au GUIEnter * :call Maximize_Window()
 
 let g:NERDTreeDirArrows=1
+
+let g:solarized_visibility="low"

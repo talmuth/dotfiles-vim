@@ -121,6 +121,7 @@ NeoBundle 'osyo-manga/unite-quickfix'
 
 NeoBundle 'git@github.com:talmuth/misc-lang-settings.vim.git'
 NeoBundle 'git@github.com:talmuth/local-snippets.vim.git'
+NeoBundle 'git@github.com:talmuth/php-balloon.vim.git'
 
 let s:has_python_powerline=0
 if has('python') || has('python3')

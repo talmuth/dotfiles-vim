@@ -25,20 +25,15 @@ NeoBundle 'Shougo/vimproc', {
       \     'unix' : 'make -f make_unix.mak',
       \    },
       \ }
-NeoBundle 'Shougo/unite.vim', {'depends': 'vim-scripts/md5.vim'}
 if !has('lua') || v:version < 703 ||
         \ (v:version == 703 && !has('patch885'))
   NeoBundle 'Shougo/neocomplcache.vim'
 else
   NeoBundle 'Shougo/neocomplete.vim', {'depends': 'vim-scripts/md5.vim'}
 end
-NeoBundle 'Shougo/neosnippet.vim'
 NeoBundle 'Shougo/context_filetype.vim'
 NeoBundle 'Shougo/vimshell.vim'
-NeoBundle 'Shougo/unite-outline'
 NeoBundle 'Shougo/vimfiler.vim'
-NeoBundle 'Shougo/unite-ssh'
-NeoBundle 'Shougo/unite-help'
 
 NeoBundle 'vim-scripts/localvimrc'
 NeoBundle 'vim-scripts/vimwiki'
@@ -46,6 +41,7 @@ NeoBundle 'vim-scripts/AutoComplPop'
 NeoBundle 'vim-scripts/ShowMarks'
 NeoBundle 'vim-scripts/greplace.vim'
 NeoBundle 'vim-scripts/sudo.vim'
+NeoBundle 'vim-scripts/Tail-Bundle'
 
 NeoBundle 'vim-ruby/vim-ruby'
 
@@ -67,12 +63,8 @@ NeoBundle 'mattn/gist-vim'
 NeoBundle 'mattn/zencoding-vim'
 NeoBundle 'mattn/webapi-vim'
 
-NeoBundle 'scrooloose/syntastic'
 NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'scrooloose/snipmate-snippets'
 NeoBundle 'scrooloose/nerdcommenter'
-
-NeoBundle 'skwp/vim-colors-solarized'
 
 NeoBundle 'pydave/gitv'
 NeoBundle 'plasticboy/vim-markdown'
@@ -90,12 +82,10 @@ NeoBundle 'chrismetcalf/vim-yankring'
 NeoBundle 'emezeske/manpageview'
 NeoBundle 'vimoutliner/vimoutliner'
 NeoBundle 'Lokaltog/vim-easymotion'
-NeoBundle 'skammer/vim-css-color'
 NeoBundle 'briangershon/html5.vim'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'cakebaker/scss-syntax.vim'
-NeoBundle 'nishigori/vim-phpunit-snippets'
-NeoBundle 'garbas/vim-snipmate', {'depends': 'MarcWeber/vim-addon-mw-utils'}
+NeoBundle 'sprsquish/thrift.vim'
 "NeoBundle 'tomtom/tlib_vim'
 NeoBundle 'slim-template/vim-slim'
 NeoBundle 'majutsushi/tagbar'
@@ -111,16 +101,13 @@ NeoBundle 'mhinz/vim-signify'
 NeoBundle 'Yggdroot/indentLine'
 NeoBundle 'maksimr/vim-jsbeautify'
 NeoBundle 'einars/js-beautify'
-NeoBundle 'tsukkee/unite-tag'
 if executable('tmux')
   NeoBundle 'tsaleh/vim-tmux'
   NeoBundle 'benmills/vimux'
   NeoBundle 'skalnik/vim-vroom'
 endif
-NeoBundle 'osyo-manga/unite-quickfix'
 
 NeoBundle 'git@github.com:talmuth/misc-lang-settings.vim.git'
-NeoBundle 'git@github.com:talmuth/local-snippets.vim.git'
 NeoBundle 'git@github.com:talmuth/php-balloon.vim.git'
 
 let s:has_python_powerline=0
@@ -131,7 +118,7 @@ if has('python') || has('python3')
   if s:python_ver > 260
     NeoBundle 'dbakker/vim-lint'
     NeoBundle 'vim-scripts/PHPUnit-QF'
-    NeoBundle 'git@github.com:talmuth/vim-php-debugger.git'
+    NeoBundle 'joonty/vdebug'
 
     silent python <<EOF
 import vim
@@ -154,8 +141,6 @@ filetype on
 syntax on
 filetype plugin indent on
 
-NeoBundleCheck
-
 "set completeopt=menuone,preview,longest
 set completeopt=menuone,preview
 "inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
@@ -167,24 +152,21 @@ let g:rubycomplete_classes_in_global = 1
 " completing Rails hangs a lot
 "let g:rubycomplete_rails = 1
 
-" syntastic
-let g:syntastic_enable_signs=1
-let g:syntastic_error_symbol='✗'
-let g:syntastic_warning_symbol='⚠'
-let g:syntastic_auto_loc_list=0
-let g:syntastic_always_populate_loc_list=1
-let g:syntastic_loc_list_height=10
-
 let g:indentLine_char='┆'
 let g:indentLine_color_term=236
 
-set background=dark
-colorscheme solarized
-let g:solarized_termcolors=256
-"let g:solarized_termcolors=16
-let g:solarized_visibility="high"
-"let g:solarized_contrast="high"
-let g:solarized_termtrans=1
+NeoBundle 'skwp/vim-colors-solarized'
+if neobundle#is_sourced('vim-colors-solarized')
+  set background=dark
+  colorscheme solarized
+  let g:solarized_termcolors=256
+  "let g:solarized_termcolors=16
+  let g:solarized_visibility="high"
+  let g:solarized_contrast="high"
+  let g:solarized_termtrans=1
+
+  hi Visual term=reverse cterm=reverse guibg=Grey
+endif
 
 let bash_is_sh=1
 set cinoptions=:0,(s,u0,U1,g0,t0
@@ -360,25 +342,12 @@ au! BufRead,BufNewFile,BufWinEnter *.zsh-theme setfiletype zsh.zshtheme
 "  autocmd BufWinEnter,BufNewFile *Test.php set filetype=php.phpunit
 "augroup END
 
-" SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
- \ "\<Plug>(neosnippet_expand_or_jump)"
- \: pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
- \ "\<Plug>(neosnippet_expand_or_jump)"
- \: "\<TAB>"
-
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
 " Use neocomplete.
 let g:neocomplete#enable_at_startup = 1
 " Use smartcase.
 let g:neocomplete#enable_smart_case = 1
-
-" For snippet_complete marker.
-if has('conceal')
-  set conceallevel=2 concealcursor=i
-endif
 
 " Define dictionary.
 let g:neocomplete#sources#dictionary#dictionaries = {
@@ -414,32 +383,107 @@ let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
 let g:localvimrc_sandbox=0
 
-" Unite
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-nnoremap <leader>f :<C-u>Unite file_rec/async -default-action=tabopen -start-insert<CR>
-nnoremap <leader>o :<C-u>Unite outline -start-insert<CR>
-nnoremap <space>s :<C-u>Unite -quick-match buffer<CR>
-
 let g:vimfiler_as_default_explorer = 1
-
-if executable('ag')
-  " Use ag in unite grep source.
-  let g:unite_source_grep_command = 'ag'
-  let g:unite_source_grep_default_opts =
-    \ '--line-numbers --nocolor --nogroup --hidden --ignore ' .
-    \  '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
-  let g:unite_source_grep_recursive_opt = ''
-elseif executable('ack-grep') || executable('ack')
-  let g:unite_source_grep_command = executable('ack') ? 'ack' : 'ack-grep'
-  let g:unite_source_grep_default_opts = '--no-heading --no-color -a -H'
-  let g:unite_source_grep_recursive_opt = ''
-endif
-nnoremap <C-F> :UniteWithCursorWord grep:. -default-action=tabopen<CR>
-
-autocmd BufEnter *
-  \  if empty(&buftype)
-  \|   nnoremap <buffer> <C-]> :<C-u>UniteWithCursorWord -immediately -default-action=tabopen tag<CR>
-  \| endif
 
 let g:signify_mapping_next_hunk = '<leader>gj'
 let g:signify_mapping_prev_hunk = '<leader>gk'
+
+" Snippets {{{
+"NeoBundle 'Shougo/neosnippet.vim', {'disabled': !has('lua')}
+
+"NeoBundle 'scrooloose/snipmate-snippets'
+"NeoBundle 'nishigori/vim-phpunit-snippets'
+"NeoBundle 'garbas/vim-snipmate', {'depends': 'MarcWeber/vim-addon-mw-utils'}
+"NeoBundle 'git@github.com:talmuth/local-snippets.vim.git'
+
+if has('conceal')
+  set conceallevel=2 concealcursor=i
+endif
+
+if neobundle#is_sourced('neosnippet.vim')
+  " SuperTab like snippets behavior.
+  imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+     \ "\<Plug>(neosnippet_expand_or_jump)"
+     \: pumvisible() ? "\<C-n>" : "\<TAB>"
+  smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+     \ "\<Plug>(neosnippet_expand_or_jump)"
+     \: "\<TAB>"
+endif
+
+NeoBundle 'SirVer/ultisnips', {'disabled': !has('python')}
+NeoBundle 'honza/vim-snippets', {'depends': 'SirVer/ultisnips'}
+
+if neobundle#is_sourced('ultisnips')
+  " For snippet_complete marker.
+  " Trigger configuration. Do not use <tab> if you use
+  " https://github.com/Valloric/YouCompleteMe.
+  let g:UltiSnipsExpandTrigger="<tab>"
+  let g:UltiSnipsJumpForwardTrigger="<c-b>"
+  let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+  " If you want :UltiSnipsEdit to split your window.
+  let g:UltiSnipsEditSplit="vertical"
+
+  let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
+endif
+" }}}
+
+" Syntastic {{{
+" }}}
+
+" Unite {{{
+NeoBundle 'Shougo/unite.vim', {'depends': 'vim-scripts/md5.vim'}
+NeoBundle 'Shougo/unite-outline'
+NeoBundle 'Shougo/unite-ssh'
+NeoBundle 'Shougo/unite-help'
+"
+"NeoBundle 'tsukkee/unite-tag'
+NeoBundle 'todesking/unite-tag', {'depends': 'Shougo/unite.vim'}
+NeoBundle 'osyo-manga/unite-quickfix', {'depends': 'Shougo/unite.vim'}
+
+if neobundle#is_sourced('unite.vim')
+  let g:unite_prompt = "➤ "
+  let g:unite_cursor_line_highlight = 'CursorLine'
+
+  call unite#filters#matcher_default#use(['matcher_fuzzy'])
+
+  nnoremap <leader>f :<C-u>Unite file_rec/async -default-action=tabopen -start-insert<CR>
+  nnoremap <leader>o :<C-u>Unite outline -start-insert<CR>
+  nnoremap <space>s :<C-u>Unite -quick-match buffer<CR>
+  autocmd BufEnter *
+    \  if empty(&buftype)
+    \|   nnoremap <buffer> <C-]> :<C-u>UniteWithCursorWord -immediately -default-action=tabopen tag<CR>
+    \| endif
+
+  if executable('ag')
+    " Use ag in unite grep source.
+    let g:unite_source_grep_command = 'ag'
+    let g:unite_source_grep_default_opts =
+      \ '--line-numbers --nocolor --nogroup --hidden --ignore ''hg'' '.
+      \ '--ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'' --ignore ''*fixture*'' '
+    let g:unite_source_grep_recursive_opt = ''
+  elseif executable('ack-grep') || executable('ack')
+    let g:unite_source_grep_command = executable('ack') ? 'ack' : 'ack-grep'
+    let g:unite_source_grep_default_opts = '--no-heading --no-color -a -H'
+    let g:unite_source_grep_recursive_opt = ''
+  endif
+  nnoremap <C-F> :UniteWithCursorWord grep:. -default-action=tabopen<CR>
+
+endif
+
+" }}}
+
+" Syntastic {{{
+NeoBundle 'scrooloose/syntastic'
+
+if neobundle#is_sourced('syntastic')
+  let g:syntastic_enable_signs=1
+  let g:syntastic_error_symbol='✗'
+  let g:syntastic_warning_symbol='⚠'
+  let g:syntastic_auto_loc_list=0
+  let g:syntastic_always_populate_loc_list=0
+  let g:syntastic_loc_list_height=10
+endif
+" }}}}
+
+NeoBundleCheck

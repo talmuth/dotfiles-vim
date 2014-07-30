@@ -1,3 +1,5 @@
+" Neobundle {{{
+" Init {{{2
 set nocompatible
 
 if has('vim_starting')
@@ -17,6 +19,8 @@ endif
 
 NeoBundleFetch 'Shougo/neobundle.vim'
 
+" Bundles {{{2
+" By Shougo {{{3
 NeoBundle 'Shougo/vimproc', {
       \ 'build' : {
       \     'windows' : 'make -f make_mingw32.mak',
@@ -34,7 +38,46 @@ end
 NeoBundle 'Shougo/context_filetype.vim'
 NeoBundle 'Shougo/vimshell.vim'
 NeoBundle 'Shougo/vimfiler.vim'
+" Unite {{{4
+NeoBundle 'Shougo/unite.vim', {'depends': 'vim-scripts/md5.vim'}
+NeoBundle 'Shougo/unite-outline'
+NeoBundle 'Shougo/unite-ssh'
+NeoBundle 'Shougo/unite-help'
+"NeoBundle 'tsukkee/unite-tag'
+NeoBundle 'todesking/unite-tag', {'depends': 'Shougo/unite.vim'}
+NeoBundle 'osyo-manga/unite-quickfix', {'depends': 'Shougo/unite.vim'}
 
+if neobundle#is_sourced('unite.vim')
+  let g:unite_prompt = "➤ "
+  let g:unite_cursor_line_highlight = 'CursorLine'
+
+  call unite#filters#matcher_default#use(['matcher_fuzzy'])
+
+  nnoremap <leader>f :<C-u>Unite file_rec/async -default-action=tabopen -start-insert<CR>
+  nnoremap <leader>o :<C-u>Unite outline -start-insert<CR>
+  nnoremap <space>s :<C-u>Unite -quick-match buffer<CR>
+  autocmd BufEnter *
+    \  if empty(&buftype)
+    \|   nnoremap <buffer> <C-]> :<C-u>UniteWithCursorWord -immediately -default-action=tabopen tag<CR>
+    \| endif
+
+  if executable('ag')
+    " Use ag in unite grep source.
+    let g:unite_source_grep_command = 'ag'
+    let g:unite_source_grep_default_opts =
+      \ '--line-numbers --nocolor --nogroup --hidden --ignore ''hg'' '.
+      \ '--ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'' --ignore ''*fixture*'' '
+    let g:unite_source_grep_recursive_opt = ''
+  elseif executable('ack-grep') || executable('ack')
+    let g:unite_source_grep_command = executable('ack') ? 'ack' : 'ack-grep'
+    let g:unite_source_grep_default_opts = '--no-heading --no-color -a -H'
+    let g:unite_source_grep_recursive_opt = ''
+  endif
+  nnoremap <C-F> :UniteWithCursorWord grep:. -default-action=tabopen<CR>
+endif
+" }}}
+
+" By vim-scripts {{{3
 NeoBundle 'vim-scripts/localvimrc'
 NeoBundle 'vim-scripts/vimwiki'
 NeoBundle 'vim-scripts/AutoComplPop'
@@ -45,6 +88,7 @@ NeoBundle 'vim-scripts/Tail-Bundle'
 
 NeoBundle 'vim-ruby/vim-ruby'
 
+" By Tim Pope {{{3
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-unimpaired'
 NeoBundle 'tpope/vim-pastie'
@@ -59,13 +103,16 @@ NeoBundle 'tpope/vim-haml'
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-dispatch'
 
+" By mattn {{{3
 NeoBundle 'mattn/gist-vim'
 NeoBundle 'mattn/zencoding-vim'
 NeoBundle 'mattn/webapi-vim'
 
+" By scrooloose {{{3
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/nerdcommenter'
 
+" By other random good guys {{{3
 NeoBundle 'pydave/gitv'
 NeoBundle 'plasticboy/vim-markdown'
 NeoBundle 'sjl/gundo.vim'
@@ -101,292 +148,16 @@ NeoBundle 'mhinz/vim-signify'
 NeoBundle 'Yggdroot/indentLine'
 NeoBundle 'maksimr/vim-jsbeautify'
 NeoBundle 'einars/js-beautify'
+" TMUX related {{{4
 if executable('tmux')
   NeoBundle 'tsaleh/vim-tmux'
   NeoBundle 'benmills/vimux'
   NeoBundle 'skalnik/vim-vroom'
 endif
 
+" By me {{{3
 NeoBundle 'git@github.com:talmuth/misc-lang-settings.vim.git'
 NeoBundle 'git@github.com:talmuth/php-balloon.vim.git'
-
-let s:has_python_powerline=0
-if has('python') || has('python3')
-  let s:python_ver = 0
-  silent! python import sys, vim;
-        \ vim.command("let s:python_ver="+"".join(map(str,sys.version_info[0:3])))
-  if s:python_ver > 260
-    NeoBundle 'dbakker/vim-lint'
-    NeoBundle 'vim-scripts/PHPUnit-QF'
-    NeoBundle 'joonty/vdebug'
-
-    silent python <<EOF
-import vim
-try:
-  import powerline.vim
-  vim.command("let s:has_python_powerline=1")
-except ImportError:
-  pass
-EOF
-  end
-end
-
-if s:has_python_powerline == 0
-  NeoBundle 'skwp/vim-powerline'
-else
-  NeoBundle 'baopham/linepower.vim'
-endif
-
-filetype on
-syntax on
-filetype plugin indent on
-
-"set completeopt=menuone,preview,longest
-set completeopt=menuone,preview
-"inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-
-" Omni completion settings
-set ofu=syntaxcomplete#Complete
-let g:rubycomplete_buffer_loading = 0
-let g:rubycomplete_classes_in_global = 1
-" completing Rails hangs a lot
-"let g:rubycomplete_rails = 1
-
-let g:indentLine_char='┆'
-let g:indentLine_color_term=236
-
-NeoBundle 'skwp/vim-colors-solarized'
-if neobundle#is_sourced('vim-colors-solarized')
-  set background=dark
-  colorscheme solarized
-  let g:solarized_termcolors=256
-  "let g:solarized_termcolors=16
-  let g:solarized_visibility="high"
-  let g:solarized_contrast="high"
-  let g:solarized_termtrans=1
-
-  hi Visual term=reverse cterm=reverse guibg=Grey
-endif
-
-let bash_is_sh=1
-set cinoptions=:0,(s,u0,U1,g0,t0
-
-set modelines=5
-
-set laststatus=2
-
-function! SyntaxItem()
-  return synIDattr(synID(line("."),col("."),1),"name")
-endfunction
-
-"set cuc
-"set cul
-
-set number
-set textwidth=0         " Do not wrap words (insert)
-set nowrap              " Do not wrap words (view)
-set showcmd             " Show (partial) commsand in status line.
-set showmatch           " Show matching brackets.
-set ignorecase          " Do case insensitive matching
-set smartcase           " do not ignore if search pattern has CAPS
-set incsearch           " Incremental search
-set autowriteall        " Automatically save before commands like :next and :make
-set hlsearch            " Highlight search match
-set hidden              " enable multiple modified buffers
-set nobackup            " do not write backup files
-set foldcolumn=0        " columns for folding
-set foldmethod=indent
-set foldlevel=9
-set history=1000
-set wildmenu
-set ruler
-set visualbell
-set ts=4
-set sw=4
-set eol
-set binary
-set keymap=russian-jcukenwin
-set iminsert=0
-set imsearch=0
-
-set backspace=indent,eol,start
-
-"highlight lCursor guifg=NONE guibg=Cyan
-"highlight link ShowMarksHLl LineNr
-"highlight link ShowMarksHLu LineNr
-"highlight link ShowMarksHLo LineNr
-"highlight link ShowMarksHLm LineNr
-highlight SignColumn ctermfg=239 ctermbg=235 guifg=Yellow
-
-setlocal spelllang=en_us
-
-"Ignore these files when completing names and in Explorer
-set wildignore=.svn,CVS,.git,.hg,*.o,*.a,*.class,*.mo,*.la,*.so,*.obj,*.swp,*.jpg,*.png,*.xpm,*.gif
-
-set backupdir=~/.backup
-set directory=~/.backup,~/tmp,$TMP
-
-let g:showmarks_enable = 0
-
-" Make
-":command -nargs=* Make make <args> | cwindow 3
-
-let mapleader = ","
-
-" Don't use Ex mode, use Q for formatting
-map Q gq
-
-set enc=utf-8
-" highlight trailing whitespace  
-set listchars=tab:»·,trail:·,nbsp:·,nbsp:×,extends:›,precedes:‹
-nmap <silent> <leader>s :set nolist!<CR>
-
-" extended '%' mapping for if/then/else/end etc
-runtime macros/matchit.vim
-
-" Make shift-insert work like in Xterm
-map <S-Insert> <MiddleMouse>
-map! <S-Insert> <MiddleMouse>
-
-" Ctrl-N to disable search match highlight
-nmap <silent> <C-N> :silent noh<CR>
-
-" Ctrol-E to switch between 2 last buffers
-nmap <C-E> :b#<CR>
-
-" Ctrl-P to Display the file browser tree
-nmap <C-P> :NERDTreeToggle<CR>
-" ,p to show current file in the tree
-nmap <leader>p :NERDTreeFind<CR>
-
-" ,/ to invert comment on the current line/selection
-nmap <leader>/ :call NERDComment(0, "invert")<cr>
-vmap <leader>/ :call NERDComment(0, "invert")<cr>
-
-" ,t to show tags window
-"let Tlist_Show_Menu=1
-nmap <leader>t :TagbarToggle<CR>
-"map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
-"map <C-Left> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
-
-nmap <leader>g :GundoToggle<CR>
-
-" ,sh to open vimshell tab
-nmap <Leader>sh :VimShellTab<CR>
-
-let g:yankring_replace_n_pkey = '<leader>['
-let g:yankring_replace_n_nkey = '<leader>]'
-" map ,y to show the yankring
-nmap <leader>y :YRShow<cr>
-
-if has("mouse")
-  set mouse=a
-endif
-
-let g:debuggerMaxDepth = 10
-
-nmap <silent> <A-Up> :wincmd k<CR>
-nmap <silent> <A-Down> :wincmd j<CR>
-nmap <silent> <A-Left> :wincmd h<CR>
-nmap <silent> <A-Right> :wincmd l<CR>
-
-function! <SID>StripTrailingWhitespaces()
-    " Preparation: save last search, and cursor position.
-    let _s=@/
-    let l = line(".")
-    let c = col(".")
-    " Do the business:
-    %s/\s\+$//e
-    " Clean up: restore previous search history, and cursor position
-    let @/=_s
-    call cursor(l, c)
-endfunction
-
-autocmd BufWritePre *.py,*.js,*.php,*.css,*.rb,*.yaml,*.scss :call <SID>StripTrailingWhitespaces()
-
-let g:manpageview_multimanpage=0
-
-let g:localvimrc_ask=0
-
-let g:Powerline_symbols='fancy'
-
-let g:SuperTabDefaultCompletionType="context"
-let g:SuperTabContextDefaultCompletionType="<c-n>"
-let g:SuperTabNoCompleteAfter=[',', '\s', "'", '"', '=', '>', '<', '-', '+', ':', '|', '/', '\', ';', '*']
-
-imap <Esc>[A <Up>
-imap <Esc>[B <Down>
-imap <Esc>[C <Right>
-imap <Esc>[D <Left>
-
-if &term =~ "xterm" || &term =~ "screen"
-  "256 color --
-  let &t_Co=256
-  " restore screen after quitting
-  " set t_ti=ESC7ESC[rESC[?47h t_te=ESC[?47lESC8
-  if has("terminfo")
-    let &t_Sf="\ESC[3%p1%dm"
-    let &t_Sb="\ESC[4%p1%dm"
-  else
-    let &t_Sf="\ESC[3%dm"
-    let &t_Sb="\ESC[4%dm"
-  endif
-endif
-
-highlight IndentGuidesEven ctermbg=236
-highlight IndentGuidesOdd ctermbg=235
-
-au! BufRead,BufNewFile,BufWinEnter *.zsh-theme setfiletype zsh.zshtheme
-"augroup PHPUnitFileType
-"  autocmd!
-"  autocmd BufWinEnter,BufNewFile *Test.php set filetype=php.phpunit
-"augroup END
-
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
-let g:neocomplete#enable_smart_case = 1
-
-" Define dictionary.
-let g:neocomplete#sources#dictionary#dictionaries = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-    \ }
-
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-
-" For perlomni.vim setting.
-" https://github.com/c9s/perlomni.vim
-let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
-
-let g:localvimrc_sandbox=0
-
-let g:vimfiler_as_default_explorer = 1
-
-let g:signify_mapping_next_hunk = '<leader>gj'
-let g:signify_mapping_prev_hunk = '<leader>gk'
 
 " Snippets {{{
 "NeoBundle 'Shougo/neosnippet.vim', {'disabled': !has('lua')}
@@ -395,10 +166,6 @@ let g:signify_mapping_prev_hunk = '<leader>gk'
 "NeoBundle 'nishigori/vim-phpunit-snippets'
 "NeoBundle 'garbas/vim-snipmate', {'depends': 'MarcWeber/vim-addon-mw-utils'}
 "NeoBundle 'git@github.com:talmuth/local-snippets.vim.git'
-
-if has('conceal')
-  set conceallevel=2 concealcursor=i
-endif
 
 if neobundle#is_sourced('neosnippet.vim')
   " SuperTab like snippets behavior.
@@ -427,52 +194,6 @@ if neobundle#is_sourced('ultisnips')
   let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
 endif
 " }}}
-
-" Syntastic {{{
-" }}}
-
-" Unite {{{
-NeoBundle 'Shougo/unite.vim', {'depends': 'vim-scripts/md5.vim'}
-NeoBundle 'Shougo/unite-outline'
-NeoBundle 'Shougo/unite-ssh'
-NeoBundle 'Shougo/unite-help'
-"
-"NeoBundle 'tsukkee/unite-tag'
-NeoBundle 'todesking/unite-tag', {'depends': 'Shougo/unite.vim'}
-NeoBundle 'osyo-manga/unite-quickfix', {'depends': 'Shougo/unite.vim'}
-
-if neobundle#is_sourced('unite.vim')
-  let g:unite_prompt = "➤ "
-  let g:unite_cursor_line_highlight = 'CursorLine'
-
-  call unite#filters#matcher_default#use(['matcher_fuzzy'])
-
-  nnoremap <leader>f :<C-u>Unite file_rec/async -default-action=tabopen -start-insert<CR>
-  nnoremap <leader>o :<C-u>Unite outline -start-insert<CR>
-  nnoremap <space>s :<C-u>Unite -quick-match buffer<CR>
-  autocmd BufEnter *
-    \  if empty(&buftype)
-    \|   nnoremap <buffer> <C-]> :<C-u>UniteWithCursorWord -immediately -default-action=tabopen tag<CR>
-    \| endif
-
-  if executable('ag')
-    " Use ag in unite grep source.
-    let g:unite_source_grep_command = 'ag'
-    let g:unite_source_grep_default_opts =
-      \ '--line-numbers --nocolor --nogroup --hidden --ignore ''hg'' '.
-      \ '--ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'' --ignore ''*fixture*'' '
-    let g:unite_source_grep_recursive_opt = ''
-  elseif executable('ack-grep') || executable('ack')
-    let g:unite_source_grep_command = executable('ack') ? 'ack' : 'ack-grep'
-    let g:unite_source_grep_default_opts = '--no-heading --no-color -a -H'
-    let g:unite_source_grep_recursive_opt = ''
-  endif
-  nnoremap <C-F> :UniteWithCursorWord grep:. -default-action=tabopen<CR>
-
-endif
-
-" }}}
-
 " Syntastic {{{
 NeoBundle 'scrooloose/syntastic'
 
@@ -485,5 +206,404 @@ if neobundle#is_sourced('syntastic')
   let g:syntastic_loc_list_height=10
 endif
 " }}}}
+"
+" Powerline related{{{3
+let s:has_python_powerline=0
+if has('python') || has('python3')
+  let s:python_ver = 0
+  silent! python import sys, vim;
+        \ vim.command("let s:python_ver="+"".join(map(str,sys.version_info[0:3])))
+  if s:python_ver > 260
+    NeoBundle 'dbakker/vim-lint'
+    NeoBundle 'vim-scripts/PHPUnit-QF'
+    NeoBundle 'joonty/vdebug'
 
+    silent python <<EOF
+import vim
+try:
+  import powerline.vim
+  vim.command("let s:has_python_powerline=1")
+except ImportError:
+  pass
+EOF
+  end
+end
+
+if s:has_python_powerline == 0
+  NeoBundle 'skwp/vim-powerline'
+else
+  NeoBundle 'baopham/linepower.vim'
+endif
+
+" Solarized {{{3
+NeoBundle 'skwp/vim-colors-solarized'
+if neobundle#is_sourced('vim-colors-solarized')
+  set background=dark
+  colorscheme solarized
+  let g:solarized_termcolors=256
+  "let g:solarized_termcolors=16
+  let g:solarized_visibility="high"
+  let g:solarized_contrast="high"
+  let g:solarized_termtrans=1
+
+  hi Visual term=reverse cterm=reverse guibg=Grey
+endif
+
+" Snippets {{{3
+"NeoBundle 'Shougo/neosnippet.vim', {'disabled': !has('lua')}
+
+"NeoBundle 'scrooloose/snipmate-snippets'
+"NeoBundle 'nishigori/vim-phpunit-snippets'
+"NeoBundle 'garbas/vim-snipmate', {'depends': 'MarcWeber/vim-addon-mw-utils'}
+"NeoBundle 'git@github.com:talmuth/local-snippets.vim.git'
+
+if neobundle#is_sourced('neosnippet.vim')
+  " SuperTab like snippets behavior.
+  imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+     \ "\<Plug>(neosnippet_expand_or_jump)"
+     \: pumvisible() ? "\<C-n>" : "\<TAB>"
+  smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+     \ "\<Plug>(neosnippet_expand_or_jump)"
+     \: "\<TAB>"
+endif
+
+NeoBundle 'SirVer/ultisnips', {'disabled': !has('python')}
+NeoBundle 'honza/vim-snippets', {'depends': 'SirVer/ultisnips'}
+
+if neobundle#is_sourced('ultisnips')
+  " For snippet_complete marker.
+  " Trigger configuration. Do not use <tab> if you use
+  " https://github.com/Valloric/YouCompleteMe.
+  let g:UltiSnipsExpandTrigger="<tab>"
+  let g:UltiSnipsJumpForwardTrigger="<c-b>"
+  let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+  " If you want :UltiSnipsEdit to split your window.
+  let g:UltiSnipsEditSplit="vertical"
+
+  let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
+endif
+
+" Syntastic {{{3
+NeoBundle 'scrooloose/syntastic'
+
+if neobundle#is_sourced('syntastic')
+  let g:syntastic_enable_signs=1
+  let g:syntastic_error_symbol='✗'
+  let g:syntastic_warning_symbol='⚠'
+  let g:syntastic_auto_loc_list=0
+  let g:syntastic_always_populate_loc_list=0
+  let g:syntastic_loc_list_height=10
+endif
+
+
+" Basic options {{{1
+filetype on
+syntax on
+filetype plugin indent on
+
+set complete=.,w,b,u,t
+set completeopt=longest,menuone,preview
+
+set number
+set showcmd             " Show (partial) commsand in status line.
+set showmatch           " Show matching brackets.
+set ignorecase          " Do case insensitive matching
+set smartcase           " do not ignore if search pattern has CAPS
+set incsearch           " Incremental search
+set autowriteall        " Automatically save before commands like :next and :make
+set hlsearch            " Highlight search match
+set hidden              " enable multiple modified buffers
+set nobackup            " do not write backup files
+set foldcolumn=0        " columns for folding
+set foldmethod=marker
+set foldlevel=9
+set history=1000
+set ruler
+set visualbell
+set binary
+set keymap=russian-jcukenwin
+set iminsert=0
+set imsearch=0
+set backspace=indent,eol,start
+set cinoptions=:0,(s,u0,U1,g0,t0
+set modelines=5
+set laststatus=2
+set enc=utf-8
+" highlight trailing whitespace  
+set listchars=tab:»·,trail:·,nbsp:·,nbsp:×,extends:›,precedes:‹
+set showbreak=↪
+
+" Backup {{{2
+set backupdir=~/.backup//
+set undodir=~/.undo//
+set backupskip=/tmp/*
+set directory=~/.backup//,~/tmp//,$TMP//
+set noswapfile
+
+" Make those folders automatically if they don't already exist. {{{3
+if !isdirectory(expand(&undodir))
+    call mkdir(expand(&undodir), "p")
+endif
+if !isdirectory(expand(&backupdir))
+    call mkdir(expand(&backupdir), "p")
+endif
+if !isdirectory(expand(&directory))
+    call mkdir(expand(&directory), "p")
+endif
+" }}}2
+" Wildmenu completion {{{2
+set wildmenu
+set wildmode=list:longest
+
+set wildignore+=.hg,.git,.svn                    " Version control
+set wildignore+=*.aux,*.out,*.toc                " LaTeX intermediate files
+set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg   " binary images
+set wildignore+=*.o,*.obj,*.exe,*.dll,*.manifest " compiled object files
+set wildignore+=*.spl                            " compiled spelling word lists
+set wildignore+=*.sw?                            " Vim swap files
+set wildignore+=*.DS_Store                       " OSX bullshit
+
+set wildignore+=*.luac                           " Lua byte code
+
+set wildignore+=migrations                       " Django migrations
+set wildignore+=*.pyc                            " Python byte code
+
+set wildignore+=*.orig                           " Merge resolution files
+
+" Clojure/Leiningen
+set wildignore+=classes
+set wildignore+=lib
+" }}}2
+" Line Return {{{2
+" Make sure Vim returns to the same line when you reopen a file.
+" Thanks, Amit
+augroup line_return
+    au!
+    au BufReadPost *
+        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+        \     execute 'normal! g`"zvzz' |
+        \ endif
+augroup END
+
+" Tabs/spaces/line-ends {{{2
+set tabstop=8
+set shiftwidth=4
+set softtabstop=4
+set expandtab
+set wrap
+set textwidth=120
+set formatoptions=qrn1j
+set colorcolumn=+1
+" }}}
+
+if has("mouse")
+  set mouse=a
+endif
+
+if has('conceal')
+  set conceallevel=2
+  set concealcursor=i
+endif
+
+setlocal spelllang=en_us
+
+" Extended configuration {{{1
+let g:bash_is_sh=1
+
+let g:mapleader=","
+
+" Keymapings {{{2
+" Don't use Ex mode, use Q for formatting
+map Q gq
+
+nmap <silent> <leader>s :set nolist!<CR>
+
+" extended '%' mapping for if/then/else/end etc
+runtime macros/matchit.vim
+
+" Make shift-insert work like in Xterm
+map <S-Insert> <MiddleMouse>
+map! <S-Insert> <MiddleMouse>
+
+" Ctrl-N to disable search match highlight
+nmap <silent> <C-N> :silent noh<CR>
+
+" Ctrol-E to switch between 2 last buffers
+nmap <C-E> :b#<CR>
+nmap <silent> <A-Up> :wincmd k<CR>
+nmap <silent> <A-Down> :wincmd j<CR>
+nmap <silent> <A-Left> :wincmd h<CR>
+nmap <silent> <A-Right> :wincmd l<CR>
+
+imap <Esc>[A <Up>
+imap <Esc>[B <Down>
+imap <Esc>[C <Right>
+imap <Esc>[D <Left>
+
+" StripTrailingWhitespaces {{{2
+function! <SID>StripTrailingWhitespaces()
+    " Preparation: save last search, and cursor position.
+    let _s=@/
+    let l = line(".")
+    let c = col(".")
+    " Do the business:
+    %s/\s\+$//e
+    " Clean up: restore previous search history, and cursor position
+    let @/=_s
+    call cursor(l, c)
+endfunction
+
+autocmd BufWritePre *.py,*.js,*.php,*.css,*.rb,*.yaml,*.scss :call <SID>StripTrailingWhitespaces()
+" }}}2
+" Terminal settings {{{2
+if &term =~ "xterm" || &term =~ "screen"
+  "256 color --
+  let &t_Co=256
+  " restore screen after quitting
+  " set t_ti=ESC7ESC[rESC[?47h t_te=ESC[?47lESC8
+  if has("terminfo")
+    let &t_Sf="\ESC[3%p1%dm"
+    let &t_Sb="\ESC[4%p1%dm"
+  else
+    let &t_Sf="\ESC[3%dm"
+    let &t_Sb="\ESC[4%dm"
+  endif
+endif " }}}2
+" autogroups {{{2
+au! BufRead,BufNewFile,BufWinEnter *.zsh-theme setfiletype zsh.zshtheme
+"augroup PHPUnitFileType
+"  autocmd!
+"  autocmd BufWinEnter,BufNewFile *Test.php set filetype=php.phpunit
+"augroup END
+" }}}2
+" Show info about item under cursor {{{2
+" usable for filetype/colorsheme debugging
+function! SyntaxItem()
+  return synIDattr(synID(line("."),col("."),1),"name")
+endfunction
+" }}}2
+" Plugins configuration {{{1
+" Showmarks {{{2
+"highlight lCursor guifg=NONE guibg=Cyan
+"highlight link ShowMarksHLl LineNr
+"highlight link ShowMarksHLu LineNr
+"highlight link ShowMarksHLo LineNr
+"highlight link ShowMarksHLm LineNr
+highlight SignColumn ctermfg=239 ctermbg=235 guifg=Yellow
+
+let g:showmarks_enable = 0
+
+" NERDTree {{{2
+" Ctrl-P to Display the file browser tree
+nmap <C-P> :NERDTreeToggle<CR>
+" ,p to show current file in the tree
+nmap <leader>p :NERDTreeFind<CR>
+
+" ,/ to invert comment on the current line/selection
+nmap <leader>/ :call NERDComment(0, "invert")<cr>
+vmap <leader>/ :call NERDComment(0, "invert")<cr>
+
+" Tagbar {{{2
+" ,t to show tags window
+"let Tlist_Show_Menu=1
+nmap <leader>t :TagbarToggle<CR>
+"map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+"map <C-Left> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+
+" Gundo {{{2
+nmap <leader>g :GundoToggle<CR>
+
+" VimShell {{{2
+" ,sh to open vimshell tab
+nmap <Leader>sh :VimShellTab<CR>
+
+" Deebugger {{{2
+let g:debuggerMaxDepth = 10
+
+" Yankring {{{2
+let g:yankring_replace_n_pkey = '<leader>['
+let g:yankring_replace_n_nkey = '<leader>]'
+" map ,y to show the yankring
+nmap <leader>y :YRShow<cr>
+
+" indentLine {{{2
+highlight IndentGuidesEven ctermbg=236
+highlight IndentGuidesOdd ctermbg=235
+
+let g:indentLine_char='┆'
+let g:indentLine_color_term=236
+
+" vimfiler {{{2
+let g:vimfiler_as_default_explorer = 1
+
+" Localvimrc {{{2
+let g:localvimrc_ask=0
+let g:localvimrc_sandbox=0
+
+" Signify {{{2
+let g:signify_mapping_next_hunk = '<leader>gj'
+let g:signify_mapping_prev_hunk = '<leader>gk'
+
+" Manpageview {{{2
+let g:manpageview_multimanpage=0
+
+" Powerline {{{2
+let g:Powerline_symbols='fancy'
+
+" Supertab {{{2
+let g:SuperTabDefaultCompletionType="context"
+let g:SuperTabContextDefaultCompletionType="<c-n>"
+let g:SuperTabNoCompleteAfter=[',', '\s', "'", '"', '=', '>', '<', '-', '+', ':', '|', '/', '\', ';', '*']
+
+" Completion {{{2
+set ofu=syntaxcomplete#Complete
+
+" Omni completion settings {{{3
+let g:rubycomplete_buffer_loading = 0
+let g:rubycomplete_classes_in_global = 1
+" completing Rails hangs a lot
+"let g:rubycomplete_rails = 1
+
+" Disable AutoComplPop {{{3
+let g:acp_enableAtStartup = 0
+" Use neocomplete.
+let g:neocomplete#enable_at_startup = 1
+" Use smartcase.
+let g:neocomplete#enable_smart_case = 1
+
+" Define dictionary {{{3
+let g:neocomplete#sources#dictionary#dictionaries = {
+    \ 'default' : '',
+    \ 'vimshell' : $HOME.'/.vimshell_hist',
+    \ 'scheme' : $HOME.'/.gosh_completions'
+    \ }
+
+" Define keyword {{{3
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+" Enable omni completion {{{3
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+" Enable heavy omni completion. {{{3
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
+" For perlomni.vim setting.
+" https://github.com/c9s/perlomni.vim
+let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+" }}}
+
+" AMEN {{{1
 NeoBundleCheck

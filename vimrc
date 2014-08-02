@@ -111,6 +111,7 @@ NeoBundle 'mattn/webapi-vim'
 " By scrooloose {{{3
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'scrooloose/syntastic'
 
 " By other random good guys {{{3
 NeoBundle 'pydave/gitv'
@@ -194,18 +195,6 @@ if neobundle#is_sourced('ultisnips')
   let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
 endif
 " }}}
-" Syntastic {{{
-NeoBundle 'scrooloose/syntastic'
-
-if neobundle#is_sourced('syntastic')
-  let g:syntastic_enable_signs=1
-  let g:syntastic_error_symbol='✗'
-  let g:syntastic_warning_symbol='⚠'
-  let g:syntastic_auto_loc_list=0
-  let g:syntastic_always_populate_loc_list=0
-  let g:syntastic_loc_list_height=10
-endif
-" }}}}
 "
 " Powerline related{{{3
 let s:has_python_powerline=0
@@ -303,7 +292,7 @@ syntax on
 filetype plugin indent on
 
 set complete=.,w,b,u,t
-set completeopt=longest,menuone,preview
+set completeopt=menuone,preview
 
 set number
 set showcmd             " Show (partial) commsand in status line.
@@ -354,7 +343,7 @@ endif
 " }}}2
 " Wildmenu completion {{{2
 set wildmenu
-set wildmode=list:longest
+set wildmode=longest,full
 
 set wildignore+=.hg,.git,.svn                    " Version control
 set wildignore+=*.aux,*.out,*.toc                " LaTeX intermediate files
@@ -504,6 +493,11 @@ nmap <leader>p :NERDTreeFind<CR>
 nmap <leader>/ :call NERDComment(0, "invert")<cr>
 vmap <leader>/ :call NERDComment(0, "invert")<cr>
 
+let NERDTreeIgnore = ['.vim$', '\~$', '.*\.pyc$', 'pip-log\.txt$', 'whoosh_index',
+                    \ 'xapian_index', '.*.pid', 'monitor.py', '.*-fixtures-.*.json',
+                    \ '.*\.o$', 'db.db', 'tags.bak', '.*\.pdf$', '.*\.mid$',
+                    \ '.*\.midi$', 'fixtures/**/*.php']
+
 " Tagbar {{{2
 " ,t to show tags window
 "let Tlist_Show_Menu=1
@@ -535,7 +529,7 @@ let g:indentLine_char='┆'
 let g:indentLine_color_term=236
 
 " vimfiler {{{2
-let g:vimfiler_as_default_explorer = 1
+let g:vimfiler_as_default_explorer=1
 
 " Localvimrc {{{2
 let g:localvimrc_ask=0
@@ -555,6 +549,16 @@ let g:Powerline_symbols='fancy'
 let g:SuperTabDefaultCompletionType="context"
 let g:SuperTabContextDefaultCompletionType="<c-n>"
 let g:SuperTabNoCompleteAfter=[',', '\s', "'", '"', '=', '>', '<', '-', '+', ':', '|', '/', '\', ';', '*']
+
+" Syntastic {{{2
+if neobundle#is_sourced('syntastic')
+  let g:syntastic_enable_signs=1
+  let g:syntastic_error_symbol='✗'
+  let g:syntastic_warning_symbol='⚠'
+  let g:syntastic_auto_loc_list=0
+  let g:syntastic_always_populate_loc_list=0
+  let g:syntastic_loc_list_height=10
+endif
 
 " Completion {{{2
 set ofu=syntaxcomplete#Complete

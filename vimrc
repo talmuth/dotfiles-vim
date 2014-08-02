@@ -37,7 +37,6 @@ else
 end
 NeoBundle 'Shougo/context_filetype.vim'
 NeoBundle 'Shougo/vimshell.vim'
-NeoBundle 'Shougo/vimfiler.vim'
 " Unite {{{4
 NeoBundle 'Shougo/unite.vim', {'depends': 'vim-scripts/md5.vim'}
 NeoBundle 'Shougo/unite-outline'
@@ -61,6 +60,7 @@ if neobundle#is_sourced('unite.vim')
     \|   nnoremap <buffer> <C-]> :<C-u>UniteWithCursorWord -immediately -default-action=tabopen tag<CR>
     \| endif
 
+  " ag configuration {{{5
   if executable('ag')
     " Use ag in unite grep source.
     let g:unite_source_grep_command = 'ag'
@@ -74,17 +74,19 @@ if neobundle#is_sourced('unite.vim')
     let g:unite_source_grep_recursive_opt = ''
   endif
   nnoremap <C-F> :UniteWithCursorWord grep:. -default-action=tabopen<CR>
+  " }}}5
 endif
-" }}}
+" }}}4
+NeoBundle 'Shougo/vimfiler.vim', {'depends': 'Shougo/unite.vim'}
 
 " By vim-scripts {{{3
 NeoBundle 'vim-scripts/localvimrc'
 NeoBundle 'vim-scripts/vimwiki'
-NeoBundle 'vim-scripts/AutoComplPop'
 NeoBundle 'vim-scripts/ShowMarks'
 NeoBundle 'vim-scripts/greplace.vim'
 NeoBundle 'vim-scripts/sudo.vim'
 NeoBundle 'vim-scripts/Tail-Bundle'
+NeoBundle 'vim-scripts/YankRing.vim'
 
 NeoBundle 'vim-ruby/vim-ruby'
 
@@ -105,7 +107,7 @@ NeoBundle 'tpope/vim-dispatch'
 
 " By mattn {{{3
 NeoBundle 'mattn/gist-vim'
-NeoBundle 'mattn/zencoding-vim'
+NeoBundle 'mattn/emmet-vim'
 NeoBundle 'mattn/webapi-vim'
 
 " By scrooloose {{{3
@@ -123,10 +125,8 @@ NeoBundle 'jezcope/vim-align'
 NeoBundle 'groenewege/vim-less'
 NeoBundle 'guns/xterm-color-table.vim'
 NeoBundle 'leshill/vim-json'
-NeoBundle 'tmallen/proj-vim'
 NeoBundle 'rodjek/vim-puppet'
 NeoBundle 'spiiph/vim-space'
-NeoBundle 'chrismetcalf/vim-yankring'
 NeoBundle 'emezeske/manpageview'
 NeoBundle 'vimoutliner/vimoutliner'
 NeoBundle 'Lokaltog/vim-easymotion'
@@ -159,84 +159,6 @@ endif
 " By me {{{3
 NeoBundle 'git@github.com:talmuth/misc-lang-settings.vim.git'
 NeoBundle 'git@github.com:talmuth/php-balloon.vim.git'
-
-" Snippets {{{
-"NeoBundle 'Shougo/neosnippet.vim', {'disabled': !has('lua')}
-
-"NeoBundle 'scrooloose/snipmate-snippets'
-"NeoBundle 'nishigori/vim-phpunit-snippets'
-"NeoBundle 'garbas/vim-snipmate', {'depends': 'MarcWeber/vim-addon-mw-utils'}
-"NeoBundle 'git@github.com:talmuth/local-snippets.vim.git'
-
-if neobundle#is_sourced('neosnippet.vim')
-  " SuperTab like snippets behavior.
-  imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-     \ "\<Plug>(neosnippet_expand_or_jump)"
-     \: pumvisible() ? "\<C-n>" : "\<TAB>"
-  smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-     \ "\<Plug>(neosnippet_expand_or_jump)"
-     \: "\<TAB>"
-endif
-
-NeoBundle 'SirVer/ultisnips', {'disabled': !has('python')}
-NeoBundle 'honza/vim-snippets', {'depends': 'SirVer/ultisnips'}
-
-if neobundle#is_sourced('ultisnips')
-  " For snippet_complete marker.
-  " Trigger configuration. Do not use <tab> if you use
-  " https://github.com/Valloric/YouCompleteMe.
-  let g:UltiSnipsExpandTrigger="<tab>"
-  let g:UltiSnipsJumpForwardTrigger="<c-b>"
-  let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
-  " If you want :UltiSnipsEdit to split your window.
-  let g:UltiSnipsEditSplit="vertical"
-
-  let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
-endif
-" }}}
-"
-" Powerline related{{{3
-let s:has_python_powerline=0
-if has('python') || has('python3')
-  let s:python_ver = 0
-  silent! python import sys, vim;
-        \ vim.command("let s:python_ver="+"".join(map(str,sys.version_info[0:3])))
-  if s:python_ver > 260
-    NeoBundle 'dbakker/vim-lint'
-    NeoBundle 'vim-scripts/PHPUnit-QF'
-    NeoBundle 'joonty/vdebug'
-
-    silent python <<EOF
-import vim
-try:
-  import powerline.vim
-  vim.command("let s:has_python_powerline=1")
-except ImportError:
-  pass
-EOF
-  end
-end
-
-if s:has_python_powerline == 0
-  NeoBundle 'skwp/vim-powerline'
-else
-  NeoBundle 'baopham/linepower.vim'
-endif
-
-" Solarized {{{3
-NeoBundle 'skwp/vim-colors-solarized'
-if neobundle#is_sourced('vim-colors-solarized')
-  set background=dark
-  colorscheme solarized
-  let g:solarized_termcolors=256
-  "let g:solarized_termcolors=16
-  let g:solarized_visibility="high"
-  let g:solarized_contrast="high"
-  let g:solarized_termtrans=1
-
-  hi Visual term=reverse cterm=reverse guibg=Grey
-endif
 
 " Snippets {{{3
 "NeoBundle 'Shougo/neosnippet.vim', {'disabled': !has('lua')}
@@ -273,18 +195,72 @@ if neobundle#is_sourced('ultisnips')
   let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
 endif
 
-" Syntastic {{{3
-NeoBundle 'scrooloose/syntastic'
+" Python dependent {{{3
+let s:has_python_powerline=0
+if has('python') || has('python3')
+  let s:python_ver = 0
+  silent! python import sys, vim;
+        \ vim.command("let s:python_ver="+"".join(map(str,sys.version_info[0:3])))
+  if s:python_ver > 260
+    NeoBundle 'dbakker/vim-lint'
+    NeoBundle 'vim-scripts/PHPUnit-QF'
+    NeoBundle 'joonty/vdebug'
 
-if neobundle#is_sourced('syntastic')
-  let g:syntastic_enable_signs=1
-  let g:syntastic_error_symbol='✗'
-  let g:syntastic_warning_symbol='⚠'
-  let g:syntastic_auto_loc_list=0
-  let g:syntastic_always_populate_loc_list=0
-  let g:syntastic_loc_list_height=10
+    " Powerline check {{{4
+    silent python <<EOF
+import vim
+try:
+  import powerline.vim
+  vim.command("let s:has_python_powerline=1")
+except ImportError:
+  pass
+EOF
+    " }}}4
+  end
+end
+
+" Powerline {{{3
+if s:has_python_powerline == 0
+  NeoBundle 'skwp/vim-powerline'
+else
+  NeoBundle 'baopham/linepower.vim'
+endif
+NeoBundle 'skwp/vim-colors-solarized'
+
+" Snippets {{{3
+"NeoBundle 'Shougo/neosnippet.vim', {'disabled': !has('lua')}
+
+"NeoBundle 'scrooloose/snipmate-snippets'
+"NeoBundle 'nishigori/vim-phpunit-snippets'
+"NeoBundle 'garbas/vim-snipmate', {'depends': 'MarcWeber/vim-addon-mw-utils'}
+"NeoBundle 'git@github.com:talmuth/local-snippets.vim.git'
+
+if neobundle#is_sourced('neosnippet.vim')
+  " SuperTab like snippets behavior.
+  imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+     \ "\<Plug>(neosnippet_expand_or_jump)"
+     \: pumvisible() ? "\<C-n>" : "\<TAB>"
+  smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+     \ "\<Plug>(neosnippet_expand_or_jump)"
+     \: "\<TAB>"
 endif
 
+NeoBundle 'SirVer/ultisnips', {'disabled': !has('python')}
+NeoBundle 'honza/vim-snippets', {'depends': 'SirVer/ultisnips'}
+
+if neobundle#is_sourced('ultisnips')
+  " For snippet_complete marker.
+  " Trigger configuration. Do not use <tab> if you use
+  " https://github.com/Valloric/YouCompleteMe.
+  let g:UltiSnipsExpandTrigger="<tab>"
+  let g:UltiSnipsJumpForwardTrigger="<c-b>"
+  let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+  " If you want :UltiSnipsEdit to split your window.
+  let g:UltiSnipsEditSplit="vertical"
+
+  let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
+endif
 
 " Basic options {{{1
 filetype on
@@ -303,7 +279,6 @@ set incsearch           " Incremental search
 set autowriteall        " Automatically save before commands like :next and :make
 set hlsearch            " Highlight search match
 set hidden              " enable multiple modified buffers
-set nobackup            " do not write backup files
 set foldcolumn=0        " columns for folding
 set foldmethod=marker
 set foldlevel=9
@@ -327,7 +302,7 @@ set showbreak=↪
 set backupdir=~/.backup//
 set undodir=~/.undo//
 set backupskip=/tmp/*
-set directory=~/.backup//,~/tmp//,$TMP//
+set directory=~/.backup//
 set noswapfile
 
 " Make those folders automatically if they don't already exist. {{{3
@@ -444,7 +419,7 @@ function! <SID>StripTrailingWhitespaces()
 endfunction
 
 autocmd BufWritePre *.py,*.js,*.php,*.css,*.rb,*.yaml,*.scss :call <SID>StripTrailingWhitespaces()
-" }}}2
+
 " Terminal settings {{{2
 if &term =~ "xterm" || &term =~ "screen"
   "256 color --
@@ -461,94 +436,116 @@ if &term =~ "xterm" || &term =~ "screen"
 endif " }}}2
 " autogroups {{{2
 au! BufRead,BufNewFile,BufWinEnter *.zsh-theme setfiletype zsh.zshtheme
+
 "augroup PHPUnitFileType
 "  autocmd!
 "  autocmd BufWinEnter,BufNewFile *Test.php set filetype=php.phpunit
 "augroup END
-" }}}2
+
 " Show info about item under cursor {{{2
 " usable for filetype/colorsheme debugging
 function! SyntaxItem()
   return synIDattr(synID(line("."),col("."),1),"name")
 endfunction
-" }}}2
-" Plugins configuration {{{1
-" Showmarks {{{2
-"highlight lCursor guifg=NONE guibg=Cyan
-"highlight link ShowMarksHLl LineNr
-"highlight link ShowMarksHLu LineNr
-"highlight link ShowMarksHLo LineNr
-"highlight link ShowMarksHLm LineNr
-highlight SignColumn ctermfg=239 ctermbg=235 guifg=Yellow
 
-let g:showmarks_enable = 0
+" Plugins configuration {{{1
+" ShowMarks {{{2
+if neobundle#is_sourced('ShowMarks')
+  "highlight lCursor guifg=NONE guibg=Cyan
+  "highlight link ShowMarksHLl LineNr
+  "highlight link ShowMarksHLu LineNr
+  "highlight link ShowMarksHLo LineNr
+  "highlight link ShowMarksHLm LineNr
+  highlight SignColumn ctermfg=239 ctermbg=235 guifg=Yellow
+
+  let g:showmarks_enable = 0
+
+  nmap <leader>sm :ShowMarksToggle<CR>
+endif
 
 " NERDTree {{{2
-" Ctrl-P to Display the file browser tree
-nmap <C-P> :NERDTreeToggle<CR>
-" ,p to show current file in the tree
-nmap <leader>p :NERDTreeFind<CR>
+if neobundle#is_sourced('nerdtree')
+  " Ctrl-P to Display the file browser tree
+  nmap <C-P> :NERDTreeToggle<CR>
+  " ,p to show current file in the tree
+  nmap <leader>p :NERDTreeFind<CR>
 
-" ,/ to invert comment on the current line/selection
-nmap <leader>/ :call NERDComment(0, "invert")<cr>
-vmap <leader>/ :call NERDComment(0, "invert")<cr>
+  let NERDTreeIgnore = ['.vim$', '\~$', '.*\.pyc$', 'pip-log\.txt$', 'whoosh_index',
+                      \ 'xapian_index', '.*.pid', 'monitor.py', '.*-fixtures-.*.json',
+                      \ '.*\.o$', 'db.db', 'tags.bak', '.*\.pdf$', '.*\.mid$',
+                      \ '.*\.midi$', 'fixtures/**/*.php']
+endif
 
-let NERDTreeIgnore = ['.vim$', '\~$', '.*\.pyc$', 'pip-log\.txt$', 'whoosh_index',
-                    \ 'xapian_index', '.*.pid', 'monitor.py', '.*-fixtures-.*.json',
-                    \ '.*\.o$', 'db.db', 'tags.bak', '.*\.pdf$', '.*\.mid$',
-                    \ '.*\.midi$', 'fixtures/**/*.php']
+" NERDCommenter {{{2
+if neobundle#is_sourced('nerdcommenter')
+  " ,/ to invert comment on the current line/selection
+  nmap <leader>/ :call NERDComment(0, "invert")<cr>
+  vmap <leader>/ :call NERDComment(0, "invert")<cr>
+endif
 
 " Tagbar {{{2
-" ,t to show tags window
-"let Tlist_Show_Menu=1
-nmap <leader>t :TagbarToggle<CR>
-"map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
-"map <C-Left> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+if neobundle#is_sourced('tagbar')
+  " ,t to show tags window
+  "let Tlist_Show_Menu=1
+  nmap <leader>t :TagbarToggle<CR>
+  "map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+  "map <C-Left> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+endif
 
 " Gundo {{{2
-nmap <leader>g :GundoToggle<CR>
+if neobundle#is_sourced('gundo.vim')
+  nmap <leader>g :GundoToggle<CR>
+endif
 
 " VimShell {{{2
-" ,sh to open vimshell tab
-nmap <Leader>sh :VimShellTab<CR>
+if neobundle#is_sourced('vimshell.vim')
+  " ,sh to open vimshell tab
+  nmap <Leader>sh :VimShellTab<CR>
+endif
 
-" Deebugger {{{2
-let g:debuggerMaxDepth = 10
-
-" Yankring {{{2
-let g:yankring_replace_n_pkey = '<leader>['
-let g:yankring_replace_n_nkey = '<leader>]'
-" map ,y to show the yankring
-nmap <leader>y :YRShow<cr>
+" YankRing {{{2
+if neobundle#is_sourced('YankRing.vim')
+  let g:yankring_replace_n_pkey = '<leader>['
+  let g:yankring_replace_n_nkey = '<leader>]'
+  " map ,y to show the yankring
+  nmap <leader>y :YRShow<cr>
+endif
 
 " indentLine {{{2
-highlight IndentGuidesEven ctermbg=236
-highlight IndentGuidesOdd ctermbg=235
+if neobundle#is_sourced('indentLine')
+  highlight IndentGuidesEven ctermbg=236
+  highlight IndentGuidesOdd ctermbg=235
 
-let g:indentLine_char='┆'
-let g:indentLine_color_term=236
+  let g:indentLine_char='┆'
+  let g:indentLine_color_term=236
+endif
 
 " vimfiler {{{2
-let g:vimfiler_as_default_explorer=1
+if neobundle#is_sourced('vimfiler.vim')
+  let g:vimfiler_as_default_explorer=1
+endif
 
 " Localvimrc {{{2
-let g:localvimrc_ask=0
-let g:localvimrc_sandbox=0
+if neobundle#is_sourced('localvimrc')
+  let g:localvimrc_ask=0
+  let g:localvimrc_sandbox=0
+endif
 
 " Signify {{{2
-let g:signify_mapping_next_hunk = '<leader>gj'
-let g:signify_mapping_prev_hunk = '<leader>gk'
+if neobundle#is_sourced('vim-signify')
+  let g:signify_mapping_next_hunk = '<leader>gj'
+  let g:signify_mapping_prev_hunk = '<leader>gk'
+end
 
 " Manpageview {{{2
-let g:manpageview_multimanpage=0
+if neobundle#is_sourced('manpageview')
+  let g:manpageview_multimanpage=0
+endif
 
 " Powerline {{{2
-let g:Powerline_symbols='fancy'
-
-" Supertab {{{2
-let g:SuperTabDefaultCompletionType="context"
-let g:SuperTabContextDefaultCompletionType="<c-n>"
-let g:SuperTabNoCompleteAfter=[',', '\s', "'", '"', '=', '>', '<', '-', '+', ':', '|', '/', '\', ';', '*']
+if neobundle#is_sourced('vim-poserline')
+  let g:Powerline_symbols='fancy'
+endif
 
 " Syntastic {{{2
 if neobundle#is_sourced('syntastic')
@@ -560,54 +557,146 @@ if neobundle#is_sourced('syntastic')
   let g:syntastic_loc_list_height=10
 endif
 
-" Completion {{{2
-set ofu=syntaxcomplete#Complete
+" Solarized {{{2
+if neobundle#is_sourced('vim-colors-solarized')
+  colorscheme solarized
+  let g:solarized_termcolors=256
+  "let g:solarized_termcolors=16
+  let g:solarized_visibility="high"
+  let g:solarized_contrast="high"
+  let g:solarized_termtrans=1
 
+  hi Visual term=reverse cterm=reverse guibg=Grey
+
+  set background=dark
+endif
+
+" Completion {{{2
 " Omni completion settings {{{3
+set ofu=syntaxcomplete#Complete
 let g:rubycomplete_buffer_loading = 0
 let g:rubycomplete_classes_in_global = 1
 " completing Rails hangs a lot
 "let g:rubycomplete_rails = 1
 
-" Disable AutoComplPop {{{3
-let g:acp_enableAtStartup = 0
-" Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
-let g:neocomplete#enable_smart_case = 1
+" Neocomplete {{{3
+if neobundle#is_sourced('neocomplete.vim')
+  " Use neocomplete.
+  let g:neocomplete#enable_at_startup = 1
+  " Use smartcase.
+  let g:neocomplete#enable_smart_case = 1
 
-" Define dictionary {{{3
-let g:neocomplete#sources#dictionary#dictionaries = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-    \ }
+  " Define dictionary {{{4
+  let g:neocomplete#sources#dictionary#dictionaries = {
+      \ 'default' : '',
+      \ 'vimshell' : $HOME.'/.vimshell_hist',
+      \ 'scheme' : $HOME.'/.gosh_completions'
+      \ }
 
-" Define keyword {{{3
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
+  " Define keyword {{{4
+  if !exists('g:neocomplete#keyword_patterns')
+      let g:neocomplete#keyword_patterns = {}
+  endif
+  let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+  " Enable heavy omni completion. {{{4
+  if !exists('g:neocomplete#sources#omni#input_patterns')
+    let g:neocomplete#sources#omni#input_patterns = {}
+  endif
+  let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+  "let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+  "let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
 endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
-" Enable omni completion {{{3
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+" Neocomplcache {{{3
+if neobundle#is_sourced('neocomplcache.vim')
+  " Use neocomplcache.
+  let g:neocomplcache_enable_at_startup = 1
+  " Use smartcase.
+  let g:neocomplcache_enable_smart_case = 1
+  " Set minimum syntax keyword length.
+  let g:neocomplcache_min_syntax_length = 3
+  let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
 
-" Enable heavy omni completion. {{{3
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
+  " Enable heavy features. {{{4
+  " Use camel case completion.
+  "let g:neocomplcache_enable_camel_case_completion = 1
+  " Use underbar completion.
+  "let g:neocomplcache_enable_underbar_completion = 1
+
+  " Define dictionary. {{{4
+  let g:neocomplcache_dictionary_filetype_lists = {
+      \ 'default' : '',
+      \ 'vimshell' : $HOME.'/.vimshell_hist',
+      \ 'scheme' : $HOME.'/.gosh_completions'
+      \ }
+
+  " Define keyword. {{{4
+  if !exists('g:neocomplcache_keyword_patterns')
+      let g:neocomplcache_keyword_patterns = {}
+  endif
+  let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
+
+  " Plugin key-mappings. {{{4
+  inoremap <expr><C-g>     neocomplcache#undo_completion()
+  inoremap <expr><C-l>     neocomplcache#complete_common_string()
+
+  " Recommended key-mappings. {{{5
+  " <CR>: close popup and save indent.
+  inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+  function! s:my_cr_function()
+    return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+  endfunction
+
+  " <TAB>: completion.
+  inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+
+  " <C-h>, <BS>: close popup and delete backword char.
+  inoremap <expr><C-h>  neocomplcache#smart_close_popup()."\<C-h>"
+  inoremap <expr><BS>   neocomplcache#smart_close_popup()."\<C-h>"
+  inoremap <expr><C-y>  neocomplcache#close_popup()
+  inoremap <expr><C-e>  neocomplcache#cancel_popup()
+
+  " Close popup by <Space>.
+  inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() : "\<Space>"
+
+  " For cursor moving in insert mode(Not recommended) {{{5
+  "inoremap <expr><Left>  neocomplcache#close_popup() . "\<Left>"
+  "inoremap <expr><Right> neocomplcache#close_popup() . "\<Right>"
+  "inoremap <expr><Up>    neocomplcache#close_popup() . "\<Up>"
+  "inoremap <expr><Down>  neocomplcache#close_popup() . "\<Down>"
+  " Or set this.
+  "let g:neocomplcache_enable_cursor_hold_i = 1
+  " Or set this.
+  "let g:neocomplcache_enable_insert_char_pre = 1
+
+  " AutoComplPop like behavior.
+  "let g:neocomplcache_enable_auto_select = 1
+
+  " Shell like behavior(not recommended). {{{5
+  "set completeopt+=longest
+  "let g:neocomplcache_enable_auto_select = 1
+  "let g:neocomplcache_disable_auto_complete = 1
+  "inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+
+  " Enable heavy omni completion. {{{4
+  if !exists('g:neocomplcache_omni_patterns')
+    let g:neocomplcache_omni_patterns   = {}
+  endif
+  let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+  let g:neocomplcache_omni_patterns.c   = '[^.[:digit:] *\t]\%(\.\|->\)'
+  let g:neocomplcache_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
 endif
-let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
 
-" For perlomni.vim setting.
-" https://github.com/c9s/perlomni.vim
-let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+" Neocomplete & Neocomplcache common configuration {{{2
+if neobundle#is_sourced('neocomplcache.vim') || neobundle#is_sourced('neocomplete')
+  " Enable omni completion. {{{4
+  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+endif
 " }}}
-
 " AMEN {{{1
 NeoBundleCheck

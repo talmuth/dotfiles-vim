@@ -46,36 +46,6 @@ NeoBundle 'Shougo/unite-help'
 NeoBundle 'todesking/unite-tag', {'depends': 'Shougo/unite.vim'}
 NeoBundle 'osyo-manga/unite-quickfix', {'depends': 'Shougo/unite.vim'}
 
-if neobundle#is_sourced('unite.vim')
-  let g:unite_prompt = "➤ "
-  let g:unite_cursor_line_highlight = 'CursorLine'
-
-  call unite#filters#matcher_default#use(['matcher_fuzzy'])
-
-  nnoremap <leader>f :<C-u>Unite file_rec/async -default-action=tabopen -start-insert<CR>
-  nnoremap <leader>o :<C-u>Unite outline -start-insert<CR>
-  nnoremap <space>s :<C-u>Unite -quick-match buffer<CR>
-  autocmd BufEnter *
-    \  if empty(&buftype)
-    \|   nnoremap <buffer> <C-]> :<C-u>UniteWithCursorWord -immediately -default-action=tabopen tag<CR>
-    \| endif
-
-  " ag configuration {{{5
-  if executable('ag')
-    " Use ag in unite grep source.
-    let g:unite_source_grep_command = 'ag'
-    let g:unite_source_grep_default_opts =
-      \ '--line-numbers --nocolor --nogroup --hidden --ignore ''hg'' '.
-      \ '--ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'' --ignore ''*fixture*'' '
-    let g:unite_source_grep_recursive_opt = ''
-  elseif executable('ack-grep') || executable('ack')
-    let g:unite_source_grep_command = executable('ack') ? 'ack' : 'ack-grep'
-    let g:unite_source_grep_default_opts = '--no-heading --no-color -a -H'
-    let g:unite_source_grep_recursive_opt = ''
-  endif
-  nnoremap <C-F> :UniteWithCursorWord grep:. -default-action=tabopen<CR>
-  " }}}5
-endif
 " }}}4
 NeoBundle 'Shougo/vimfiler.vim', {'depends': 'Shougo/unite.vim'}
 
@@ -133,7 +103,7 @@ NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'briangershon/html5.vim'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'cakebaker/scss-syntax.vim'
-NeoBundle 'sprsquish/thrift.vim'
+NeoBundle 'wlue/thrift.vim'
 "NeoBundle 'tomtom/tlib_vim'
 NeoBundle 'slim-template/vim-slim'
 NeoBundle 'majutsushi/tagbar'
@@ -156,6 +126,9 @@ if executable('tmux')
   NeoBundle 'skalnik/vim-vroom'
 endif
 
+NeoBundle 'editorconfig/editorconfig-vim'
+NeoBundle 'joom/latex-unicoder.vim'
+
 " By me {{{3
 NeoBundle 'git@github.com:talmuth/misc-lang-settings.vim.git'
 NeoBundle 'git@github.com:talmuth/php-balloon.vim.git'
@@ -167,6 +140,7 @@ NeoBundle 'git@github.com:talmuth/php-balloon.vim.git'
 "NeoBundle 'nishigori/vim-phpunit-snippets'
 "NeoBundle 'garbas/vim-snipmate', {'depends': 'MarcWeber/vim-addon-mw-utils'}
 "NeoBundle 'git@github.com:talmuth/local-snippets.vim.git'
+
 
 if neobundle#is_sourced('neosnippet.vim')
   " SuperTab like snippets behavior.
@@ -259,7 +233,9 @@ if neobundle#is_sourced('ultisnips')
   " If you want :UltiSnipsEdit to split your window.
   let g:UltiSnipsEditSplit="vertical"
 
-  let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
+  if neobundle#is_sourced('vim-snippets')
+    let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
+  endif
 endif
 
 " Basic options {{{1
@@ -375,7 +351,7 @@ setlocal spelllang=en_us
 " Extended configuration {{{1
 let g:bash_is_sh=1
 
-let g:mapleader=","
+let g:mapleader="\<space>"
 
 " Keymapings {{{2
 " Don't use Ex mode, use Q for formatting
@@ -449,6 +425,37 @@ function! SyntaxItem()
 endfunction
 
 " Plugins configuration {{{1
+" Unite {{{2
+if neobundle#is_sourced('unite.vim')
+  let g:unite_prompt = "〉"
+  let g:unite_cursor_line_highlight = 'CursorLine'
+
+  call unite#filters#matcher_default#use(['matcher_fuzzy'])
+
+  nmap <leader>f :<C-u>Unite file_rec/async -default-action=tabopen -start-insert<CR>
+  nmap <leader>o :<C-u>Unite outline -start-insert<CR>
+  nmap <leader>s :<C-u>Unite -quick-match buffer<CR>
+  autocmd BufEnter *
+    \  if empty(&buftype)
+    \|   nmap <buffer> <C-]> :<C-u>UniteWithCursorWord -immediately -default-action=tabopen tag<CR>
+    \| endif
+
+  " ag configuration {{{5
+  if executable('ag')
+    " Use ag in unite grep source.
+    let g:unite_source_grep_command = 'ag'
+    let g:unite_source_grep_default_opts =
+      \ '--line-numbers --nocolor --nogroup --hidden --ignore ''hg'' '.
+      \ '--ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'' --ignore ''*fixture*'' '
+    let g:unite_source_grep_recursive_opt = ''
+  elseif executable('ack-grep') || executable('ack')
+    let g:unite_source_grep_command = executable('ack') ? 'ack' : 'ack-grep'
+    let g:unite_source_grep_default_opts = '--no-heading --no-color -a -H'
+    let g:unite_source_grep_recursive_opt = ''
+  endif
+  nmap <C-F> :UniteWithCursorWord grep:. -default-action=tabopen<CR>
+  " }}}5
+endif
 " ShowMarks {{{2
 if neobundle#is_sourced('ShowMarks')
   "highlight lCursor guifg=NONE guibg=Cyan

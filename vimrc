@@ -100,7 +100,7 @@ NeoBundle 'spiiph/vim-space'
 NeoBundle 'emezeske/manpageview'
 NeoBundle 'vimoutliner/vimoutliner'
 NeoBundle 'Lokaltog/vim-easymotion'
-NeoBundle 'briangershon/html5.vim'
+NeoBundle 'othree/html5.vim'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'cakebaker/scss-syntax.vim'
 NeoBundle 'wlue/thrift.vim'
@@ -128,6 +128,7 @@ endif
 
 NeoBundle 'editorconfig/editorconfig-vim'
 NeoBundle 'joom/latex-unicoder.vim'
+NeoBundle 'christoomey/vim-tmux-navigator'
 
 " By me {{{3
 NeoBundle 'git@github.com:talmuth/misc-lang-settings.vim.git'
@@ -705,5 +706,15 @@ if neobundle#is_sourced('neocomplcache.vim') || neobundle#is_sourced('neocomplet
   autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 endif
 " }}}
+
+" vim-tmux-navigator {{{2
+let g:tmux_navigator_no_mappings = 1
+
+nnoremap <silent> <C-H> :TmuxNavigateLeft<cr>
+nnoremap <silent> <C-J> :TmuxNavigateDown<cr>
+nnoremap <silent> <C-K> :TmuxNavigateUp<cr>
+nnoremap <silent> <C-L> :TmuxNavigateRight<cr>
+nnoremap <silent> <C-/> :TmuxNavigatePrevious<cr>
+
 " AMEN {{{1
 NeoBundleCheck

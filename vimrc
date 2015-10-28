@@ -13,7 +13,11 @@ if has("win32")
   lang C
   call neobundle#rc(expand('~/vimfiles/bundle/'))
 else
-  set shell=/bin/zsh
+  if executable('/usr/local/bin/zsh')
+    set shell=/usr/local/bin/zsh
+  elseif executable('/bin/zsh')
+    set shell=/bin/zsh
+  endif
   call neobundle#rc(expand('~/.vim/bundle/'))
 endif
 

@@ -138,42 +138,6 @@ NeoBundle 'christoomey/vim-tmux-navigator'
 NeoBundle 'git@github.com:talmuth/misc-lang-settings.vim.git'
 NeoBundle 'git@github.com:talmuth/php-balloon.vim.git'
 
-" Snippets {{{3
-"NeoBundle 'Shougo/neosnippet.vim', {'disabled': !has('lua')}
-
-"NeoBundle 'scrooloose/snipmate-snippets'
-"NeoBundle 'nishigori/vim-phpunit-snippets'
-"NeoBundle 'garbas/vim-snipmate', {'depends': 'MarcWeber/vim-addon-mw-utils'}
-"NeoBundle 'git@github.com:talmuth/local-snippets.vim.git'
-
-
-if neobundle#is_sourced('neosnippet.vim')
-  " SuperTab like snippets behavior.
-  imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-     \ "\<Plug>(neosnippet_expand_or_jump)"
-     \: pumvisible() ? "\<C-n>" : "\<TAB>"
-  smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-     \ "\<Plug>(neosnippet_expand_or_jump)"
-     \: "\<TAB>"
-endif
-
-NeoBundle 'SirVer/ultisnips', {'disabled': !has('python')}
-NeoBundle 'honza/vim-snippets', {'depends': 'SirVer/ultisnips'}
-
-if neobundle#is_sourced('ultisnips')
-  " For snippet_complete marker.
-  " Trigger configuration. Do not use <tab> if you use
-  " https://github.com/Valloric/YouCompleteMe.
-  let g:UltiSnipsExpandTrigger="<tab>"
-  let g:UltiSnipsJumpForwardTrigger="<c-b>"
-  let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
-  " If you want :UltiSnipsEdit to split your window.
-  let g:UltiSnipsEditSplit="vertical"
-
-  let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
-endif
-
 " Python dependent {{{3
 let s:has_python_powerline=0
 if has('python') || has('python3')

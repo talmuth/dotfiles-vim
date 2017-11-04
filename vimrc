@@ -130,6 +130,10 @@ if executable('tmux')
   NeoBundle 'skalnik/vim-vroom'
 endif
 
+if executable('rndc')
+  NeoBundle 'Absolight/vim-bind'
+endif
+
 NeoBundle 'editorconfig/editorconfig-vim'
 NeoBundle 'joom/latex-unicoder.vim'
 NeoBundle 'christoomey/vim-tmux-navigator'

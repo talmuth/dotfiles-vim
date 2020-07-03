@@ -1,4 +1,3 @@
-/viminfo
-/tmp
-/.netrwhist
-/sessions
+!.gitignore
+.netrwhist
+autoload
